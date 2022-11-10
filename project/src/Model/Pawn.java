@@ -1,12 +1,9 @@
 package Model;
 
 public class Pawn {
-
-	private final String name;
 	private int currentPosition; // Number of cases that the pawn crossed on the "plateau"
 	
-	public Pawn(String name) {
-		this.name = name;
+	public Pawn() {
 		currentPosition = 1;
 	}
 	
@@ -19,7 +16,6 @@ public class Pawn {
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();
-		string.append(name);
 		string.append(' ');
 		string.append(currentPosition);
 		return string.toString();
