@@ -59,15 +59,28 @@ public class Player {
 	private final Pawn pawn;
 	
 	/**
+	 * Number of special patch that the player win.
+	 * 
+	 * @see Player#Player(String)
+	 */
+	private int specialPatches;
+	
+	/**
 	 * List of patch that the player win.
 	 * 
 	 * @see Player#Player(String)
 	 */
-	private final ArrayList<Patches> patches;
+	private Patches patches;
+	
+	/**
+	 * True if the player had the special tile, otherwise false.
+	 * 
+	 * @see Player#Player(String)
+	 */
+	private boolean specialTile;
 	
 	/**
      * Constructor player.
-     * <p>
      * When constructing a "player" object, the turn is 0,
      * the list of buttons is empty, and cover the is also empty.
      * 
@@ -86,7 +99,8 @@ public class Player {
 		this.quiltboard = new Quiltboard();
 		this.pawn = new Pawn();
 		this.turn = false;
-		this.patches = new ArrayList<Patches>();
+		this.specialPatches = 0;
+		this.patches = null;
 	}
 	
 	/**
@@ -127,7 +141,7 @@ public class Player {
 	 * @see SimplePatches#price()
 	 * 
 	 */
-	public void buyPatches(SimplePatches patch) {
+	public void buyPatches(Patches patch) {
 		if(buttons < patch.price())
 		{
 			System.err.println("Error : You don't have enough button.\n");
@@ -135,7 +149,6 @@ public class Player {
 		else
 		{
 			buttons = buttons - patch.price();
-			patches.add(patch);
 		}
 	}
 	
