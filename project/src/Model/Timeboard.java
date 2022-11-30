@@ -3,14 +3,15 @@ package Model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class Timeboard { // Maybe change with a record see what is the problem later
 	private final ArrayList<Player> players; // WARNING CHNAGE TYPE
 	private final HashMap<Integer, MagicCase> magicCases;
-	private static int nbrCases = 50; // We will see later for that
-	
-	public Timeboard(ArrayList<Player> p) {
-		players = p;
-		magicCases = new HashMap<Integer, MagicCase>();
+	public static final int NBR_CASE = 52; // We will see later for that
+	public static final int NBR_SPECIAL_PATCH = 9;
+	public Timeboard(ArrayList<Player> players) {
+		this.players = players;
+		this.magicCases = new HashMap<Integer, MagicCase>();
 	}
 	
 	/*TODO : initialise the case of the timeboard with magic effect (random)*/

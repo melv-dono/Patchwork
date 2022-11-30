@@ -1,7 +1,7 @@
 package Model;
 
 /**
- * <b>Patches represents a patch in the game</b>
+ * <b>Patch represents a patch in the game</b>
  * <p>
  * A patch is characterized by :
  * <ul>
@@ -14,11 +14,11 @@ package Model;
  * <p>
  * @author Mickaël RAKOTOARISON, Melvyn NZENGA.
  */
-public class Patches {
+public class Patch {
 	/**
 	 * number of button in the patch, this number must be positive.
 	 * 
-	 * @see Patches#Patches(String)
+	 * @see Patch#Patches(String)
 	 */
 	private final int nbrButtons;
 	
@@ -26,21 +26,21 @@ public class Patches {
 	 * price of the button, this number must be positive, the program check
 	 * if the player have enough of button.
 	 * 
-	 * @see Patches#Patches(String)
+	 * @see Patch#Patches(String)
 	 */
 	private final int price;
 	
 	/**
 	 * number of case that the player must make when buying patches.
 	 * 
-	 * @see Patches#Patches(String)
+	 * @see Patch#Patches(String)
 	 */
 	private final int spaces;
 	
 	/**
 	 * The layout and dimension of the patch.
 	 * 
-	 * @see Patches#Patches(String)
+	 * @see Patch#Patches(String)
 	 */
 	private int[][] dimension;
 	
@@ -55,12 +55,12 @@ public class Patches {
      * @param dimension
      * 				 The layout and dimension of the patch.
      * 
-     * @see Patches#nbrButtons
-     * @see Patches#price
-     * @see Patches#spaces
-     * @see Patches#dimension
+     * @see Patch#nbrButtons
+     * @see Patch#price
+     * @see Patch#spaces
+     * @see Patch#dimension
      */
-	public Patches(int nbrButtons, int price, int spaces, int[][] dimension)
+	public Patch(int nbrButtons, int price, int spaces, int[][] dimension)
 	{
 		this.nbrButtons = nbrButtons;
 		this.price = price;
@@ -69,7 +69,7 @@ public class Patches {
 	}
 	
 	/**
-	 * change the {@link Patches#dimension} array to another array
+	 * change the {@link Patch#dimension} array to another array
 	 * in which the rotation is performed.
 	 * 
 	 * @param direction
@@ -98,7 +98,7 @@ public class Patches {
 	}
 	
 	/**
-	 * change the {@link Patches#dimension} array to another array
+	 * change the {@link Patch#dimension} array to another array
 	 * in which the flip is performed.
 	 *  
 	 */
@@ -138,6 +138,14 @@ public class Patches {
 	{
 		return spaces;
 	}
+	
+	/**
+	 * Accessor for dimension.
+	 */
+	public int[][] dimension()
+	{
+		return dimension;
+	}
 	@Override
 	public String toString() {
 		StringBuilder b = new StringBuilder();
@@ -157,13 +165,4 @@ public class Patches {
 		return b.toString();
 	}
 	
-	public static void main(String[] args) {
-		int[][] t = {{1,1,1,1},{0,0,0,1}};
-		Patches p = new Patches(1, 3, 4, t);
-		System.out.println(p);
-		p.rotate(1);
-		System.out.println(p);
-		p.flip();
-		System.out.println(p);
-	}
 }

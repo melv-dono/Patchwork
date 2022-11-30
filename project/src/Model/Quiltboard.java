@@ -1,45 +1,49 @@
 package Model;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class Quiltboard {
 
-	private final int[][] dimension; //Maybe find a better name for this attribut
+	private final int[][] dimension;
 	/**
-	 * Map of patches.
+	 * Map of patch.
 	 */
-	private final LinkedHashMap<Integer, Patchs> patches;
+	private final LinkedHashMap<Integer, Patch> IdOfPatch;
 	/**
 	 * The dimension of the quiltboard.
 	 */
 	private final static int cols = 9;
 	private final static int rows = 9;
 	/**
-	 * The last int we use for the key of patches.
+	 * The last int we use for the key of patch.
 	 */
 	private static int patchKey;
 	
 	public Quiltboard() {
 		dimension = new int[cols][rows];
-		patches = new LinkedHashMap<Integer, Patchs>();
+		IdOfPatch = new LinkedHashMap<Integer, Patch>();
 		patchKey = 0;
 	}
 	
-	/*TODO : Place the Patchs on the quilboard with the coordinates i and j*/
-	public void putPatch(Patches patch, int i, int j) {
-		ArrayList<ArrayList<Integer>> dimensionTmp = patch.dimension();
-		/*
-		for(int row = i; i < dimensionTmp.; row++)
+	/*
+	 * Place the Patchs on the quilboard with the coordinates i and j
+	 * 
+	 * @param patch
+	 * 			The patch that we put on the quiltboard.
+	 * @param i,j
+	 * 			The uppermost left square is placed on i,j.
+	 */
+	public void putPatch(Patch patch, int i, int j) {
+		int[][] dimensionTmp = patch.dimension();
+		patchKey++;
+		for(int row = i, iPatch = 0; row < (dimensionTmp.length + i); row++, iPatch++)
 		{
-			for(int col = j; j < dimensionTmp[row].length; col++)
+			for(int col = j, jPatch = 0; col < (dimensionTmp[0].length + j); col++, jPatch++)
 			{
-				 dimension[row][col] = dimensionTmp[row][col];
+				 dimension[row][col] = (dimensionTmp[iPatch][jPatch] == 1) ? patchKey : 0;
 			}
 		}
-		*/
-		patches.putIfAbsent(patchKey, patch);
-		patchKey++;
+		IdOfPatch.putIfAbsent(patchKey, patch);
 	}
 	
 	/**
@@ -49,7 +53,7 @@ public class Quiltboard {
 	 */
 	public int countScore() {
 		int result = 0;
-		for(var entry: patches.entrySet())
+		for(var entry: IdOfPatch.entrySet())
 		{
 			result += entry.getValue().nbrButtons();
 		}
@@ -59,21 +63,21 @@ public class Quiltboard {
 	/**
 	 * Print of the quiltboard.
 	 */
+	@Override
 	public String toString()
 	{
 		var result = new StringBuilder();
 		for(int row = 0; row < rows; row++)
 		{
-			result.append("[");
 			for(int col = 0; col < cols; col++)
 			{
 				result.append(dimension[row][col]);
-				result.append(" ");
 			}
-			result.append("]\n");
+			result.append("\n");
 		}
 		result.append("\n");
 		return result.toString();
 	}
+	
 	
 }

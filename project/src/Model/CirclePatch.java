@@ -28,9 +28,9 @@ public class CirclePatch {
 	 * 
 	 * @param int of the next pach select.
 	 * 
-	 * @return Patches the copy of the patch of the player choose.
+	 * @return Patch the copy of the patch of the player choose.
 	 */
-	public Patches selectNextPatch(int next)
+	public Patch selectNextPatch(int next)
 	{
 		return null;
 	}
@@ -38,9 +38,9 @@ public class CirclePatch {
 	 * List of next 3 purchasable patches
 	 * 
 	 */
-	public List<Patches> nextPatches()
+	public List<Patch> nextPatches()
 	{
-		List<Patches> result = new ArrayList<Patches>();
+		List<Patch> result = new ArrayList<Patch>();
 		return result;
 	}
 }

@@ -66,13 +66,6 @@ public class Player {
 	private int specialPatches;
 	
 	/**
-	 * List of patch that the player win.
-	 * 
-	 * @see Player#Player(String)
-	 */
-	private Patches patches;
-	
-	/**
 	 * True if the player had the special tile, otherwise false.
 	 * 
 	 * @see Player#Player(String)
@@ -100,7 +93,7 @@ public class Player {
 		this.pawn = new Pawn();
 		this.turn = false;
 		this.specialPatches = 0;
-		this.patches = null;
+		this.specialTile = false;
 	}
 	
 	/**
@@ -141,7 +134,7 @@ public class Player {
 	 * @see SimplePatches#price()
 	 * 
 	 */
-	public void buyPatches(Patches patch) {
+	public void buyPatches(Patch patch) {
 		if(buttons < patch.price())
 		{
 			System.err.println("Error : You don't have enough button.\n");
@@ -157,7 +150,7 @@ public class Player {
 	 * 
 	 * @param patch
 	 */
-	public void placePatchs(Patches patch, int i, int j) {
+	public void placePatchs(Patch patch, int i, int j) {
 		quiltboard.putPatch(patch, i, j);
 	}
 	
@@ -167,8 +160,23 @@ public class Player {
 	 * @see Player#buttons
 	 */
 	public void earnButton(int buttonWin) {
-		buttons = buttons + buttonWin;
+		buttons += buttonWin;
 	}
-
-
+	/**
+	 * adds special patch to SpecialPach
+	 * 
+	 * @see Player#specialPatches
+	 */
+	public void earnSpecialPatch() {
+		specialPatches++;
+	}
+	
+	/**
+	 * Change special to true because the player have 7x7 cases on the quiltboard.
+	 * 
+	 * @see Player#specialTile
+	 */
+	public void getSpecialTile() {
+		specialTile = true;
+	}
 }
