@@ -13,6 +13,10 @@ public class Pawn {
 		}
 	}
 	
+	public int currentPosition()
+	{
+		return currentPosition;
+	}
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();

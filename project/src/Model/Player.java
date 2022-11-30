@@ -82,7 +82,7 @@ public class Player {
 	/**
      * Constructor player.
      * When constructing a "player" object, the turn is 0,
-     * the list of buttons is empty, and cover the is also empty.
+     * the list of buttons is empty, and the cover is also empty.
      * 
      * @param name
      *            Name of the player.
