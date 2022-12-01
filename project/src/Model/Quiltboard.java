@@ -25,25 +25,33 @@ public class Quiltboard {
 		patchKey = 0;
 	}
 	
-	/*
+	/**
 	 * Place the Patchs on the quilboard with the coordinates i and j
 	 * 
 	 * @param patch
 	 * 			The patch that we put on the quiltboard.
 	 * @param i,j
 	 * 			The uppermost left square is placed on i,j.
+	 * @return 
+	 * 			The value is 1 if the pose is not valid othewise 0; 
 	 */
-	public void putPatch(Patch patch, int i, int j) {
+	public int putPatch(Patch patch, int i, int j) {
 		int[][] dimensionTmp = patch.dimension();
 		patchKey++;
 		for(int row = i, iPatch = 0; row < (dimensionTmp.length + i); row++, iPatch++)
 		{
 			for(int col = j, jPatch = 0; col < (dimensionTmp[0].length + j); col++, jPatch++)
 			{
-				 dimension[row][col] = (dimensionTmp[iPatch][jPatch] == 1) ? patchKey : 0;
+				if(dimension[row][col] != 0) {
+					dimension[row][col] = (dimensionTmp[iPatch][jPatch] == 1) ? patchKey : 0;
+				}
+				else {
+					return 1;
+				}
 			}
 		}
 		IdOfPatch.putIfAbsent(patchKey, patch);
+		return 0;
 	}
 	
 	/**
@@ -55,7 +63,7 @@ public class Quiltboard {
 		int result = 0;
 		for(var entry: IdOfPatch.entrySet())
 		{
-			result += entry.getValue().nbrButtons();
+			result += entry.getValue().price();
 		}
 		return result;
 	}

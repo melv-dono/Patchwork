@@ -71,18 +71,9 @@ public class Patch {
      * @see Patch#spaces
      * @see Patch#dimension
      */
-<<<<<<< Updated upstream:project/src/Model/Patch.java
-	public Patch(int nbrButtons, int price, int spaces, int[][] dimension)
-	{
-		this.nbrButtons = nbrButtons;
-		this.price = price;
-		this.spaces = spaces;
-		this.dimension = dimension;
-=======
-	public Patches(Label label, int[][] dimension) {
+	public Patch(Label label, int[][] dimension) {
 		this.dimension = Objects.requireNonNull(dimension);
 		this.label = label;
->>>>>>> Stashed changes:project/src/Model/Patches.java
 	}
 	
 	/**
@@ -182,18 +173,4 @@ public class Patch {
 		b.append(label.toString());
 		return b.toString();
 	}
-	
-<<<<<<< Updated upstream:project/src/Model/Patch.java
-=======
-	public static void main(String[] args) {
-		int[][] t = {{1,1,1,1},{0,0,0,1}};
-		Label l = new Label(1, 3, 4);
-		Patches p = new Patches(l, t);
-		System.out.println(p);
-		p.rotate(1);
-		System.out.println(p);
-		p.flip();
-		System.out.println(p);
-	}
->>>>>>> Stashed changes:project/src/Model/Patches.java
 }

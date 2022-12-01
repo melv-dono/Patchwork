@@ -58,12 +58,6 @@ public class Player {
 	 */
 	private final Pawn pawn;
 	
-	/**
-	 * Number of special patch that the player win.
-	 * 
-	 * @see Player#Player(String)
-	 */
-	private int specialPatches;
 	
 	/**
 	 * True if the player had the special tile, otherwise false.
@@ -92,7 +86,6 @@ public class Player {
 		this.quiltboard = new Quiltboard();
 		this.pawn = new Pawn();
 		this.turn = false;
-		this.specialPatches = 0;
 		this.specialTile = false;
 	}
 	
@@ -149,9 +142,12 @@ public class Player {
 	 * Place patch on the QuiltBoard.
 	 * 
 	 * @param patch
+	 * 
+	 * @return 
+	 * 			The value is 1 if the pose is not valid othewise 0;
 	 */
-	public void placePatchs(Patch patch, int i, int j) {
-		quiltboard.putPatch(patch, i, j);
+	public int placePatchs(Patch patch, int i, int j) {
+		return quiltboard.putPatch(patch, i, j);
 	}
 	
 	/**
@@ -162,14 +158,6 @@ public class Player {
 	public void earnButton(int buttonWin) {
 		buttons += buttonWin;
 	}
-	/**
-	 * adds special patch to SpecialPach
-	 * 
-	 * @see Player#specialPatches
-	 */
-	public void earnSpecialPatch() {
-		specialPatches++;
-	}
 	
 	/**
 	 * Change special to true because the player have 7x7 cases on the quiltboard.
@@ -178,5 +166,22 @@ public class Player {
 	 */
 	public void getSpecialTile() {
 		specialTile = true;
+	}
+	
+	/**
+	 * Acessor for name.
+	 */
+	public String name()
+	{
+		return name;
+	}
+	
+	/**
+	 * 
+	 * @return int position of the pawn on the TimeBoard.
+	 */
+	public int currentPosition()
+	{
+		return pawn.currentPosition();
 	}
 }

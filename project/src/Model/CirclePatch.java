@@ -20,11 +20,11 @@ public class CirclePatch {
 	/**
 	 * 
 	 */
-	private final LinkedHashMap<Integer, Patches> circlePatch;
+	private final LinkedHashMap<Integer, Patch> circlePatch;
 	
 	public CirclePatch() { // Melvyn removed this LinkedHashMap<Integer, Patches> circlePatch
 		this.pawn = new Pawn();
-		this.circlePatch = new LinkedHashMap<Integer, Patches>();
+		this.circlePatch = new LinkedHashMap<Integer, Patch>();
 		
 	}
 	
@@ -62,10 +62,10 @@ public class CirclePatch {
 	 * @return 
 	 * 			an object patch create from the data of the file in parameter
 	 */
-	public Patches createPatch(Path path) throws IOException {
+	public Patch createPatch(Path path) throws IOException {
 		int data[] = readPatchData(path);
 		int tab[][] = readPatchTab(path, data[0], data[1]);
-		return new Patches(new Label(data[2], data[3], data[4]), tab);	
+		return new Patch(new Label(data[2], data[3], data[4]), tab);	
 		
 	}
 	
