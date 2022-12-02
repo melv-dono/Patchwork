@@ -1,6 +1,5 @@
 package Model;
 
-import java.util.ArrayList;
 
 
 /**
@@ -67,6 +66,11 @@ public class Player {
 	private boolean specialTile;
 	
 	/**
+	 * The Patch that the player must put on the quiltboard.
+	 */
+	private Patch patch;
+	
+	/**
      * Constructor player.
      * When constructing a "player" object, the turn is 0,
      * the list of buttons is empty, and the cover is also empty.
@@ -84,9 +88,10 @@ public class Player {
 		this.name = name;
 		this.buttons = 0;
 		this.quiltboard = new Quiltboard();
-		this.pawn = new Pawn();
+		this.pawn = new Pawn(1);
 		this.turn = false;
 		this.specialTile = false;
+		this.patch = null;
 	}
 	
 	/**
@@ -121,13 +126,12 @@ public class Player {
 	
 	/**
 	 * 
-	 * @param patch The patch bought by the player.
 	 * 
 	 * @see Player#buttons
 	 * @see SimplePatches#price()
 	 * 
 	 */
-	public void buyPatches(Patch patch) {
+	public void buyPatches() {
 		if(buttons < patch.price())
 		{
 			System.err.println("Error : You don't have enough button.\n");
@@ -141,12 +145,13 @@ public class Player {
 	/**
 	 * Place patch on the QuiltBoard.
 	 * 
-	 * @param patch
+	 * @param 
+	 * 			The place on the quiltboard to put the patch.
 	 * 
 	 * @return 
-	 * 			The value is 1 if the pose is not valid othewise 0;
+	 * 			The value is 1 if the pose is not valid othewise 0.
 	 */
-	public int placePatchs(Patch patch, int i, int j) {
+	public int placePatchs(int i, int j) {
 		return quiltboard.putPatch(patch, i, j);
 	}
 	
@@ -157,6 +162,14 @@ public class Player {
 	 */
 	public void earnButton(int buttonWin) {
 		buttons += buttonWin;
+	}
+	
+	/**
+	 * add player quiltboard buttons in player buttons. 
+	 */
+	public void earnButtonQuiltboard()
+	{
+		buttons += quiltboard.countScore();
 	}
 	
 	/**
@@ -178,10 +191,36 @@ public class Player {
 	
 	/**
 	 * 
-	 * @return int position of the pawn on the TimeBoard.
+	 * @return
+	 * 			int position of the pawn on the TimeBoard.
 	 */
 	public int currentPosition()
 	{
 		return pawn.currentPosition();
+	}
+	
+	/**
+	 * @return boolean true if the turn is for this player else false.
+	 */
+	public boolean turn() {
+		return turn;
+	}
+	/**
+	 * change the patch for the patch that the player chose.
+	 * @param 
+	 * 			thisPatch The chosen patch.
+	 */
+	public void patchChose(Patch thisPatch)
+	{
+		patch = thisPatch;
+	}
+	
+	/**
+	 * Accessor for the chosen patch.
+	 * 
+	 */
+	public Patch patch()
+	{
+		return patch;
 	}
 }

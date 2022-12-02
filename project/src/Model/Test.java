@@ -1,5 +1,7 @@
 package Model;
 
+import View.Interaction;
+
 // TODO this class is here to do all kind of tests
 
 public class Test {
@@ -8,7 +10,59 @@ public class Test {
 		var firstPlayer = new Player("first");
 		var secondPlayer = new Player("second");
 		var timeboard = new Timeboard(firstPlayer, secondPlayer);
+		var circlePatch = new CirclePatch();
 		timeboard.initMagicCases();
+		// In function:
+		Player currentPlayer;
+		
+		int indexPatch = 0;
+		int[] coordinates = new int[2];
+		int resultPlacement = 1;
+		if(timeboard.turn() == firstPlayer.name())
+		{
+			currentPlayer = firstPlayer;
+		}
+		else
+		{
+			currentPlayer = secondPlayer;
+		}
+		while(currentPlayer.turn())
+		{
+			if(Interaction.advanceOrTake() == 0)
+			{
+				indexPatch = Interaction.chosePatch();
+				currentPlayer.patchChose(circlePatch.selectNextPatch(indexPatch));
+				do {
+					coordinates = Interaction.choseCoordinates();
+					resultPlacement = currentPlayer.placePatchs(coordinates[0], coordinates[1]);
+					// C'ant place patch. 
+					if(resultPlacement == -1)
+					{
+						break;
+					}
+				} while (resultPlacement == 1);
+				// give new choice placement not valid.
+				if(resultPlacement == -1)
+				{
+					continue;
+				}
+				// placement valid, change the player  attribute (button, pawn, tour) 
+				else if(resultPlacement == 0)
+				{
+					int start = currentPlayer.currentPosition(); // The start of the movement.
+					int end = currentPlayer.patch().movement(); // The end of the movement.
+					currentPlayer.buyPatches();	// Subtract the button of the player suits of patch.
+					timeboard.checkCurrentPostionPlayer(currentPlayer, start, end); // Performs the different action of each case traveled.
+					currentPlayer.movePawn(currentPlayer.patch().movement());	// move the pawn.
+					circlePatch.swapPatch(indexPatch);
+				}
+				
+			}
+			else
+			{
+				
+			}
+		}
 		System.out.println(timeboard);
 		/*
 		int[][] t = {{1,1,1,1},{0,0,0,1}};

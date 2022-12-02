@@ -1,7 +1,9 @@
 package Model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+
+
+import View.Interaction;
 
 
 public class Timeboard { // Maybe change with a record see what is the problem later
@@ -81,9 +83,29 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 		return string.toString();
 		
 	}
-	/*TODO : check if a player is on a magic case*/
-	public void checkCurrentPostionPlayer() {
+	public void performTurn() {
 		
+	}
+	/*TODO : check if a player is on a magic case*/
+	public void checkCurrentPostionPlayer(Player currentPlayer, int start, int end) {
+		int resultPlacement = 1;
+		int[] coordinates = new int[2];
+		for(int caseKey = start; caseKey < end; caseKey++)
+		{
+			if(cases.get(caseKey) == Case.BUTTON)
+			{
+				currentPlayer.earnButtonQuiltboard();	//earn the button on the quiltboard
+			}
+			else if(cases.get(caseKey) == Case.SPECICAL_PATCH)
+			{
+				do {
+					coordinates = Interaction.choseCoordinates();	// Chose coordinate.
+					resultPlacement = currentPlayer.placePatchs(coordinates[0], coordinates[1]); // Place the pacth
+				}while(resultPlacement == 1);
+				cases.replace(caseKey, Case.NEUTRAL); // Remove the special patch.
+			}
+		}
+		whoIsTurn();	// check who is next.
 	}
 	
 	/*TODO : check if all the player currentPosition is at the end
@@ -92,10 +114,22 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 		return false;
 	}
 	
-	/*TODO : verify who is next player and modify his turn
-	 * Warning maybe this method is not in the right place*/
+	/**
+	 *  verify who is next player and modify his turn
+	 */
 	public void whoIsTurn() {
+		if(((firstPlayer.turn() == true) && (firstPlayer.currentPosition() > secondPlayer.currentPosition()))
+				|| ((secondPlayer.turn() == true) && (secondPlayer.currentPosition() > firstPlayer.currentPosition())))
+		{
+			firstPlayer.changeTurn();
+			secondPlayer.changeTurn();
+		}
 		
+	}
+	
+	public String turn()
+	{
+		return turn;
 	}
 
 }

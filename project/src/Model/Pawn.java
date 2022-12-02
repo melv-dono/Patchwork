@@ -3,8 +3,8 @@ package Model;
 public class Pawn {
 	private int currentPosition; // Number of cases that the pawn crossed on the "plateau"
 	
-	public Pawn() {
-		currentPosition = 1;
+	public Pawn(int position) {
+		this.currentPosition = position;
 	}
 	
 	public void movePawn(int cases) {

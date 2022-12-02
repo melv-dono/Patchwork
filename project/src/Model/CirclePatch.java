@@ -23,7 +23,7 @@ public class CirclePatch {
 	private final LinkedHashMap<Integer, Patch> circlePatch;
 	
 	public CirclePatch() { // Melvyn removed this LinkedHashMap<Integer, Patches> circlePatch
-		this.pawn = new Pawn();
+		this.pawn = new Pawn(0);
 		this.circlePatch = new LinkedHashMap<Integer, Patch>();
 		
 	}
@@ -174,5 +174,16 @@ public class CirclePatch {
 	{
 		List<Patch> result = new ArrayList<Patch>();
 		return result;
+	}
+	
+	/**
+	 * Move the pawn on the chosen patch and remove ot.
+	 */
+	public void swapPatch(int index)
+	{
+		for(int i = 0; i < circlePatch.size();i++)
+		{
+			
+		}
 	}
 }
