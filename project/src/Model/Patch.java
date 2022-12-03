@@ -155,6 +155,16 @@ public class Patch {
 	}
 	
 	/**
+	 * Accessor for the patch's area
+	 * 
+	 * @return 
+	 * 		int value representing the area of the current patch
+	 */
+	public int area() {
+		return dimension.length * dimension[0].length;
+	}
+	
+	/**
 	 * Accessor for dimension.
 	 */
 	public int[][] dimension()

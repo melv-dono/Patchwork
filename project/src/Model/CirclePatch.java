@@ -6,8 +6,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Files.*;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.*;
 
 public class CirclePatch {
@@ -20,12 +21,32 @@ public class CirclePatch {
 	/**
 	 * 
 	 */
-	private final LinkedHashMap<Integer, Patch> circlePatch;
+	private final ArrayList<Patch> circlePatch;
 	
-	public CirclePatch() { // Melvyn removed this LinkedHashMap<Integer, Patches> circlePatch
+	public CirclePatch() {
 		this.pawn = new Pawn(0);
-		this.circlePatch = new LinkedHashMap<Integer, Patch>();
+		this.circlePatch = new ArrayList<Patch>();
 		
+	}
+	
+	/**
+	 * Initialize the position of the neutral token
+	 * To the index of the patch with the lowest area
+	 * This function works only if circlePatch is already initialize
+	 */
+	public void initNeutralToken() {
+		Optional<Patch> tiniest = null;
+		OptionalInt op = circlePatch
+				.stream()
+				.mapToInt(Patch::area)
+				.min();
+		if (op.isPresent()) {
+			tiniest = circlePatch
+					.stream()
+					.filter(x -> x.area() == op.getAsInt())
+					.findFirst();
+			pawn.movePawn(circlePatch.indexOf(tiniest.get()));
+		} 
 	}
 	
 	/**
@@ -43,9 +64,19 @@ public class CirclePatch {
 	 * 
 	 */
 	
-	public void initCirclePatch(String folder, int sizeFolder) throws IOException { // WARINING % 2 because only 2 files
-		for (int i = 0; i < sizeFolder; i++) { // PAS OPTI DU TOUT GÉNÉRATION DE SB + PAS DE PARSE DU INT
-			circlePatch.put(Integer.valueOf(i), createPatch(Path.of(folder).resolve("patch" + (i%2 + 1) + ".txt")));
+	public void initCirclePatch(String folder, int sizeFolder, int iteration) throws IOException { // WARINING % 2 because only 2 files
+		Path path = Path.of("src/data").resolve(folder);
+		int lineRemaining = 300; 
+		try (BufferedReader reader = Files.newBufferedReader(path); ) {
+			reader.mark(lineRemaining); // This var need to be chosen carefully regarding the memory allocation
+			for (int i = 0; i < iteration; i++) {
+				for (int j = 0; j < sizeFolder; j++) {
+					circlePatch.add(createPatch(reader, path));
+					reader.lines(); // We put 2 spaces to separate 2 different patches
+					reader.lines();
+				}
+				reader.reset();
+			}
 		}
 		
 	}
@@ -62,9 +93,9 @@ public class CirclePatch {
 	 * @return 
 	 * 			an object patch create from the data of the file in parameter
 	 */
-	public Patch createPatch(Path path) throws IOException {
-		int data[] = readPatchData(path);
-		int tab[][] = readPatchTab(path, data[0], data[1]);
+	public Patch createPatch(BufferedReader reader, Path path) throws IOException {
+		int data[] = readPatchData(reader, path);
+		int tab[][] = readPatchTab(reader, path, data[0], data[1]);
 		return new Patch(new Label(data[2], data[3], data[4]), tab);	
 		
 	}
@@ -82,16 +113,15 @@ public class CirclePatch {
 	 * 			a tab of in containing every information about the patch's data 
 	 * 			in the order of apparition
 	 */
-	public int[] readPatchData(Path path) throws IOException {
+	public int[] readPatchData(BufferedReader reader, Path path) throws IOException {
 		int patchInfo[] = new int[5];
 		String line;
-		
-		try (BufferedReader reader = Files.newBufferedReader(path);) {				
-			for (int i = 0; i < 5; i++) {
-				line = reader.readLine();
-				patchInfo[i] = Integer.parseInt(Character.toString(line.charAt(line.length() - 1)));
-			}
+			
+		for (int i = 0; i < 5; i++) {
+			line = reader.readLine();
+			patchInfo[i] = Integer.parseInt(Character.toString(line.charAt(line.length() - 1)));
 		}
+		
 		return patchInfo;			
 	}	
 	
@@ -114,24 +144,20 @@ public class CirclePatch {
 	 * @return
 	 * 			a tab representing the shape of the patch
 	 */
-	public int[][] readPatchTab(Path path, int d1, int d2) throws IOException {
+	public int[][] readPatchTab(BufferedReader reader, Path path, int d1, int d2) throws IOException {
 		int tab[][] = new int[d1][d2];
 		int pixel;
 		String line;
 		
-		try (BufferedReader reader = Files.newBufferedReader(path);) {
-			line = reader.readLine();
-			while (!line.isEmpty()) {
-				line = reader.readLine();
-			}
+		reader.readLine(); // Because we put a space between the data and tab from a same patch
+		line = reader.readLine();
 			
-			for (int i = 0; i < d1; i++) {
-				for (int j = 0; j < d2; j++) { // Normaly we dodge the \n at each line
-					pixel = reader.read(); // BIG PROBLEM IT READ 49 NOT 1
-					tab[i][j] = pixel;
-				}
-				reader.read();
+		for (int i = 0; i < d1; i++) {
+			for (int j = 0; j < d2; j++) { // Normaly we dodge the \n at each line
+				pixel = reader.read(); // BIG PROBLEM IT READ 49 NOT 1
+				tab[i][j] = pixel;
 			}
+			reader.read();
 		}
 		return tab;		
 	}
@@ -140,50 +166,45 @@ public class CirclePatch {
 	public static void main(String[] args) {
 		var c = new CirclePatch();
 		try {
-			System.out.println(c.createPatch(Path.of("src/data/phase1").resolve("patch1.txt")));
-			
-			c.initCirclePatch("src/data/phase1", 10);
-			
-			/*Artificial toString*/
-			c.circlePatch.values().stream()
-			.forEach(x -> System.out.println(x));
+			c.initCirclePatch("phase1.txt", 2, 20);				
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-		
+		c.circlePatch.forEach(x -> System.out.println(x));
 	}
 		
 	/**
 	 * copies the patch chosen by the player thanks to choosePatch()
 	 * then gives the possibility to the player to place it on the quilboard. 
 	 * 
-	 * @param int of the next pach select.
+	 * @param int of the next pacth select.
 	 * 
 	 * @return Patch the copy of the patch of the player choose.
 	 */
-	public Patch selectNextPatch(int next)
-	{
-		return null;
+	public Patch selectNextPatch(int next) {
+		return circlePatch.get(next);
 	}
+	
 	/**
 	 * List of next 3 purchasable patches
 	 * 
 	 */
-	public List<Patch> nextPatches()
-	{
+	public List<Patch> nextPatches() {
+		int index;
 		List<Patch> result = new ArrayList<Patch>();
+		for (int i = 0; i < 3; i++) {
+			index = pawn.currentPosition() + i % circlePatch.size(); // Neutral token can not exceed the number of remaining patch
+			result.add(circlePatch.get(index));
+		}
 		return result;
 	}
 	
 	/**
 	 * Move the pawn on the chosen patch and remove ot.
 	 */
-	public void swapPatch(int index)
-	{
-		for(int i = 0; i < circlePatch.size();i++)
-		{
-			
-		}
+	public void swapPatch(int index) {
+		pawn.movePawn(index);
+		circlePatch.remove(index);
 	}
 }
