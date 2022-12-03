@@ -2,6 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,11 +21,11 @@ public class CirclePatch {
 	/**
 	 * 
 	 */
-	private final LinkedHashMap<Integer, Patch> circlePatch;
+	private final ArrayList<Patch> circlePatch;
 	
 	public CirclePatch() { // Melvyn removed this LinkedHashMap<Integer, Patches> circlePatch
 		this.pawn = new Pawn(0);
-		this.circlePatch = new LinkedHashMap<Integer, Patch>();
+		this.circlePatch = new ArrayList<Patch>();
 		
 	}
 	
@@ -43,11 +44,16 @@ public class CirclePatch {
 	 * 
 	 */
 	
-	public void initCirclePatch(String folder, int sizeFolder) throws IOException { // WARINING % 2 because only 2 files
-		for (int i = 0; i < sizeFolder; i++) { // PAS OPTI DU TOUT GÉNÉRATION DE SB + PAS DE PARSE DU INT
-			circlePatch.put(Integer.valueOf(i), createPatch(Path.of(folder).resolve("patch" + (i%2 + 1) + ".txt")));
+	public void initCirclePatch(Path path, int number_patch) throws IOException {
+		try (BufferedReader reader = Files.newBufferedReader(path);)
+		{
+			
+			for(int patch_data = 0; patch_data < number_patch; patch_data++)
+			{
+				circlePatch.add(createPatch(reader));
+			}
+			
 		}
-		
 	}
 	
 	/**
@@ -62,9 +68,9 @@ public class CirclePatch {
 	 * @return 
 	 * 			an object patch create from the data of the file in parameter
 	 */
-	public Patch createPatch(Path path) throws IOException {
-		int data[] = readPatchData(path);
-		int tab[][] = readPatchTab(path, data[0], data[1]);
+	public Patch createPatch(BufferedReader reader) throws IOException {
+		int data[] = readPatchData(reader);
+		int tab[][] = readPatchTab(reader, data[0], data[1]);
 		return new Patch(new Label(data[2], data[3], data[4]), tab);	
 		
 	}
@@ -82,16 +88,15 @@ public class CirclePatch {
 	 * 			a tab of in containing every information about the patch's data 
 	 * 			in the order of apparition
 	 */
-	public int[] readPatchData(Path path) throws IOException {
+	public int[] readPatchData(BufferedReader reader) throws IOException {
 		int patchInfo[] = new int[5];
 		String line;
 		
-		try (BufferedReader reader = Files.newBufferedReader(path);) {				
-			for (int i = 0; i < 5; i++) {
-				line = reader.readLine();
-				patchInfo[i] = Integer.parseInt(Character.toString(line.charAt(line.length() - 1)));
-			}
+		for (int i = 0; i < 5; i++) {
+			line = reader.readLine();
+			patchInfo[i] = Integer.parseInt(Character.toString(line.charAt(line.length() - 1)));
 		}
+		
 		return patchInfo;			
 	}	
 	
@@ -114,24 +119,21 @@ public class CirclePatch {
 	 * @return
 	 * 			a tab representing the shape of the patch
 	 */
-	public int[][] readPatchTab(Path path, int d1, int d2) throws IOException {
+	public int[][] readPatchTab(BufferedReader reader, int d1, int d2) throws IOException {
 		int tab[][] = new int[d1][d2];
 		int pixel;
 		String line;
-		
-		try (BufferedReader reader = Files.newBufferedReader(path);) {
+		line = reader.readLine();
+		while (!line.isEmpty()) {
 			line = reader.readLine();
-			while (!line.isEmpty()) {
-				line = reader.readLine();
+		}
+		
+		for (int i = 0; i < d1; i++) {
+			for (int j = 0; j < d2; j++) { // Normaly we dodge the \n at each line
+				pixel = reader.read(); // BIG PROBLEM IT READ 49 NOT 1
+				tab[i][j] = pixel;
 			}
-			
-			for (int i = 0; i < d1; i++) {
-				for (int j = 0; j < d2; j++) { // Normaly we dodge the \n at each line
-					pixel = reader.read(); // BIG PROBLEM IT READ 49 NOT 1
-					tab[i][j] = pixel;
-				}
-				reader.read();
-			}
+			reader.read();
 		}
 		return tab;		
 	}
@@ -139,18 +141,21 @@ public class CirclePatch {
 	/*JUSTE POUR QUELQUES TESTS À ÉFFACER*/
 	public static void main(String[] args) {
 		var c = new CirclePatch();
-		try {
-			System.out.println(c.createPatch(Path.of("src/data/phase1").resolve("patch1.txt")));
-			
-			c.initCirclePatch("src/data/phase1", 10);
-			
-			/*Artificial toString*/
-			c.circlePatch.values().stream()
+		String filename="patch1.txt";
+		Path pathToFile = Paths.get(filename);
+		System.out.println(pathToFile.toAbsolutePath());
+		
+		try {			
+			c.initCirclePatch(pathToFile.toAbsolutePath(), 2);
+			/* Artificial toString
+			c.circlePatch.stream()
 			.forEach(x -> System.out.println(x));
+			*/
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
+		
 		
 	}
 		
@@ -183,7 +188,6 @@ public class CirclePatch {
 	{
 		for(int i = 0; i < circlePatch.size();i++)
 		{
-			
 		}
 	}
 }
