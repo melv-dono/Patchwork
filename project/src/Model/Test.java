@@ -11,7 +11,7 @@ public class Test {
 		var secondPlayer = new Player("second");
 		var timeboard = new Timeboard(firstPlayer, secondPlayer);
 		var circlePatch = new CirclePatch();
-		timeboard.initMagicCases();
+		timeboard.initMagicCases(false);
 		// In function:
 		Player currentPlayer;
 		
@@ -60,7 +60,7 @@ public class Test {
 			}
 			else
 			{
-				
+				timeboard.advancePlayer(currentPlayer, timeboard.oppenentPlayer(currentPlayer));
 			}
 		}
 		System.out.println(timeboard);

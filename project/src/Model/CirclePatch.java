@@ -1,7 +1,10 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -60,12 +63,13 @@ public class CirclePatch {
 	 * 				each folder of data refer to a particular phase PUT ON CONFLUENCE
 	 * 
 	 * @param sizeFolder
-	 * 				refers to the number of files inside the folder 
+	 * 				refers to the number of patch inside the file 
 	 * 
 	 */
 	
 	public void initCirclePatch(String folder, int sizeFolder, int iteration) throws IOException { // WARINING % 2 because only 2 files
-		Path path = Path.of("src/data").resolve(folder);
+		Path path = Paths.get(folder);
+		/*Path path = Path.of("src/data").resolve(folder);*/
 		int lineRemaining = 300; 
 		try (BufferedReader reader = Files.newBufferedReader(path); ) {
 			reader.mark(lineRemaining); // This var need to be chosen carefully regarding the memory allocation
@@ -78,7 +82,7 @@ public class CirclePatch {
 				reader.reset();
 			}
 		}
-		
+		Collections.shuffle(circlePatch);		
 	}
 	
 	/**
@@ -96,7 +100,7 @@ public class CirclePatch {
 	public Patch createPatch(BufferedReader reader, Path path) throws IOException {
 		int data[] = readPatchData(reader, path);
 		int tab[][] = readPatchTab(reader, path, data[0], data[1]);
-		return new Patch(new Label(data[2], data[3], data[4]), tab);	
+		return new Patch(new Label(data[2], data[3], data[4]), tab);
 		
 	}
 	
@@ -119,9 +123,12 @@ public class CirclePatch {
 			
 		for (int i = 0; i < 5; i++) {
 			line = reader.readLine();
-			patchInfo[i] = Integer.parseInt(Character.toString(line.charAt(line.length() - 1)));
+			if(line.length() > 0)
+			{
+				
+				patchInfo[i] = Integer.parseInt(Character.toString(line.charAt(line.length() - 1)));
+			}
 		}
-		
 		return patchInfo;			
 	}	
 	
@@ -146,15 +153,16 @@ public class CirclePatch {
 	 */
 	public int[][] readPatchTab(BufferedReader reader, Path path, int d1, int d2) throws IOException {
 		int tab[][] = new int[d1][d2];
-		int pixel;
-		String line;
+		Integer pixel;
 		
 		reader.readLine(); // Because we put a space between the data and tab from a same patch
+		/*
 		line = reader.readLine();
-			
+		System.out.println("Line " + line);
+	*/
 		for (int i = 0; i < d1; i++) {
 			for (int j = 0; j < d2; j++) { // Normaly we dodge the \n at each line
-				pixel = reader.read(); // BIG PROBLEM IT READ 49 NOT 1
+				pixel = Integer.parseInt(Character.toString(reader.read())); // BIG PROBLEM IT READ 49 NOT 1
 				tab[i][j] = pixel;
 			}
 			reader.read();
@@ -165,6 +173,7 @@ public class CirclePatch {
 	/*JUSTE POUR QUELQUES TESTS À ÉFFACER*/
 	public static void main(String[] args) {
 		var c = new CirclePatch();
+		
 		try {
 			c.initCirclePatch("phase1.txt", 2, 20);				
 		}
@@ -172,6 +181,7 @@ public class CirclePatch {
 			ioe.printStackTrace();
 		}
 		c.circlePatch.forEach(x -> System.out.println(x));
+		
 	}
 		
 	/**
@@ -206,5 +216,10 @@ public class CirclePatch {
 	public void swapPatch(int index) {
 		pawn.movePawn(index);
 		circlePatch.remove(index);
+	}
+	
+	public ArrayList<Patch> circlePatch()
+	{
+		return circlePatch;
 	}
 }

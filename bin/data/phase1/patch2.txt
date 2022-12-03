@@ -1,8 +1,0 @@
-dimension1 : 2
-dimension2 : 2
-button : 0
-price : 2
-movement : 2
-
-11
-11

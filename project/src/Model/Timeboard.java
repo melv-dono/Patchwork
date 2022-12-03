@@ -1,7 +1,7 @@
 package Model;
 
 import java.util.HashMap;
-
+import java.util.Objects;
 
 import View.Interaction;
 
@@ -27,7 +27,8 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 	 * Initialise the case of the timeboard with magic effect.
 	 * 
 	 */
-	public void initMagicCases() {
+	public void initMagicCases(Boolean specialPatch) {
+		Objects.requireNonNull(specialPatch);
 		Case caseValue;
 		for(int idCase = 1; idCase <= NBR_CASE; idCase++)
 		{
@@ -35,7 +36,7 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 			{
 				caseValue = Case.BUTTON;
 			}
-			else if((idCase >= 21) && ((idCase - 21) % 6 == 0))
+			else if(((idCase >= 21) && ((idCase - 21) % 6 == 0)) && specialPatch)
 			{
 				caseValue = Case.SPECICAL_PATCH;
 			}
@@ -127,9 +128,38 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 		
 	}
 	
+	/**
+	 *  Assessor for turn. 
+	 * 
+	 */
 	public String turn()
 	{
 		return turn;
+	}
+	
+	/**
+	 * return the oppenent of the cureent player.
+	 */
+	public Player oppenentPlayer(Player currentPlayer)
+	{
+		if(currentPlayer == firstPlayer)
+		{
+			return secondPlayer;
+		}
+		else
+		{
+			return firstPlayer;
+		}
+	}
+	/**
+	 * Advances the player pawn and overtakes the oppenent.
+	 */
+	public void advancePlayer(Player currentPlayer, Player oppenentPlayer)
+	{
+		int start = currentPlayer.currentPosition();
+		int end = oppenentPlayer.currentPosition() + 1;
+		currentPlayer.movePawn(end);
+		checkCurrentPostionPlayer(currentPlayer, start, end);	
 	}
 
 }
