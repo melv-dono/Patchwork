@@ -16,7 +16,8 @@ public class Interaction {
 	
 	private static final List<String> commandList = Arrays.asList(commandBuy, commandAdvences,
 			commandQuiltBoard, commandCirclePatch, commandTimeboard);
-	public static int advanceOrTake(){
+	
+	public static int menu(){
 		try ( Scanner scanner = new Scanner( System.in )) {
         	commandList.stream().forEach(commandLine -> System.out.println(commandLine));
         	String command = scanner.nextLine();
@@ -35,6 +36,24 @@ public class Interaction {
         	else {return 7;}
         }
 	}
+	
+	/**
+	 * Afficher les actions possible du style rotate flip poser son patch
+	 */
+	public static actionPossible() {
+		
+	}
+	
+	/**
+	 * Ask the user which version of the game he wants to play
+	 */
+	public static int choosePhase() {
+		return 0;
+	}
+	/**
+	 * 
+	 * @return
+	 */
 	public static int chosePatch()
 	{
 		return 0;
