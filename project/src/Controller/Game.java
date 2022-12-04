@@ -1,7 +1,11 @@
-package Model;
+package Controller;
 
 import java.io.IOException;
 import java.util.Objects;
+
+import Model.CirclePatch;
+import Model.Player;
+import Model.Timeboard;
 
 public class Game {
 	private Timeboard timeboard;
@@ -24,7 +28,6 @@ public class Game {
 		}		
 		circlePatch.initNeutralToken();
 	}
-	
 	
 	/**
 	 * Acsessor for CirclePatch;

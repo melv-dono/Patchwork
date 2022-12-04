@@ -156,6 +156,7 @@ public class Quiltboard {
 		Patch p2 = new Patch(l2, tab2);
 		Optional op2 = q.checkPatchLocation(p2, 2, 3);
 		if (op2.isPresent()) {
+			
 			q.putPatch(p2, 2, 3);
 		}
 		System.out.println(q);

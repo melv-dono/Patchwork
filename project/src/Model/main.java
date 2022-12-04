@@ -1,5 +1,7 @@
 package Model;
 
+import Controller.Game;
+
 public class main {
 
 	public static void main(String[] args) {
