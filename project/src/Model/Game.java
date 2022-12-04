@@ -24,6 +24,8 @@ public class Game {
 		}		
 		circlePatch.initNeutralToken();
 	}
+	
+	
 	/**
 	 * Acsessor for CirclePatch;
 	 */

@@ -1,9 +1,24 @@
 package View;
 
+import java.util.Scanner;
+
 public class Interaction {
 	public static int advanceOrTake()
 	{
-		return 0;
+		try ( Scanner scanner = new Scanner( System.in ) ) {
+            
+            while( true ) {
+                System.out.print( "" );
+                String login = scanner.nextLine();
+                
+                System.out.print( "Enter your password: " );
+                String password = scanner.nextLine();
+                
+                if ( login.equals( "Bond" ) && password.equals( "007" ) ) {
+                    break;
+                }
+            }
+        }
 	}
 	public static int chosePatch()
 	{
