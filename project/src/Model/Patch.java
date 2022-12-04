@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -171,6 +173,26 @@ public class Patch {
 	{
 		return dimension;
 	}
+	
+	/**
+	 * Locate on the representation of a patch every cell equals to 1
+	 * 
+	 * @return
+	 * 		return a list of coordinates for every existing cell of a patch
+	 */
+	
+	public List<Coordinate> realLocation() {
+		ArrayList<Coordinate> c = new ArrayList<>();
+		for (int i = 0; i < dimension.length; i++) {
+			for (int j = 0; j < dimension[0].length; j++) {
+				if (dimension[i][j] == 1) { // Adding coordinate when the cell exists
+					c.add(new Coordinate(i, j));
+				}
+			}
+		}
+		return List.copyOf(c);
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder b = new StringBuilder();

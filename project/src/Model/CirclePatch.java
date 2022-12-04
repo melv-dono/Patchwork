@@ -64,10 +64,11 @@ public class CirclePatch {
 	 * 
 	 */
 	
-	public void initCirclePatch(String folder, int sizeFolder, int iteration) throws IOException { // WARINING % 2 because only 2 files
+	public void initCirclePatch(String folder, int sizeFolder, int iteration) throws IOException {
 		Path path = Paths.get(folder);
 		/*Path path = Path.of("src/data").resolve(folder);*/
-		int lineRemaining = 300; 
+		int lineRemaining = 3000; 
+
 		try (BufferedReader reader = Files.newBufferedReader(path); ) {
 			reader.mark(lineRemaining); // This var need to be chosen carefully regarding the memory allocation
 			for (int i = 0; i < iteration; i++) {
@@ -169,7 +170,7 @@ public class CirclePatch {
 		var c = new CirclePatch();
 		
 		try {
-			c.initCirclePatch("phase1.txt", 2, 20);				
+			c.initCirclePatch("phase2.txt", 33, 1);				
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -216,6 +217,7 @@ public class CirclePatch {
 		return circlePatch;
 	}
 	
+	@Override
 	public String toString() {
 		var string = new StringBuilder();
 		// Print the patch of the right side of the table.

@@ -23,7 +23,7 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 		this.cases = new HashMap<Integer, Case>();
 	}
 	
-	/*
+	/**
 	 * Initialise the case of the timeboard with magic effect.
 	 * 
 	 */
