@@ -34,7 +34,7 @@ public class Test {
 				currentPlayer.patchChose(circlePatch.selectNextPatch(indexPatch));
 				do {
 					coordinates = Interaction.choseCoordinates();
-					resultPlacement = currentPlayer.placePatchs(coordinates[0], coordinates[1]);
+					resultPlacement = currentPlayer.checkPlacePatch(coordinates[0], coordinates[1]);
 					// C'ant place patch. 
 					if(resultPlacement == -1)
 					{
@@ -49,6 +49,7 @@ public class Test {
 				// placement valid, change the player  attribute (button, pawn, tour) 
 				else if(resultPlacement == 0)
 				{
+					currentPlayer.placePatchs(coordinates[0], coordinates[1]);
 					int start = currentPlayer.currentPosition(); // The start of the movement.
 					int end = currentPlayer.patch().movement(); // The end of the movement.
 					currentPlayer.buyPatches();	// Subtract the button of the player suits of patch.

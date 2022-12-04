@@ -1,18 +1,15 @@
 package Model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Files.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.stream.*;
 
 public class CirclePatch {
 	/**
@@ -76,13 +73,13 @@ public class CirclePatch {
 			for (int i = 0; i < iteration; i++) {
 				for (int j = 0; j < sizeFolder; j++) {
 					circlePatch.add(createPatch(reader, path));
-					reader.lines(); // We put 2 spaces to separate 2 different patches
-					reader.lines();
+					reader.readLine();
+					reader.readLine();
 				}
 				reader.reset();
 			}
 		}
-		Collections.shuffle(circlePatch);		
+		Collections.shuffle(circlePatch);
 	}
 	
 	/**
@@ -154,18 +151,15 @@ public class CirclePatch {
 	public int[][] readPatchTab(BufferedReader reader, Path path, int d1, int d2) throws IOException {
 		int tab[][] = new int[d1][d2];
 		Integer pixel;
-		
-		reader.readLine(); // Because we put a space between the data and tab from a same patch
-		/*
-		line = reader.readLine();
-		System.out.println("Line " + line);
-	*/
+		String line;
+		reader.readLine();// Because we put a space between the data and tab from a same patch
 		for (int i = 0; i < d1; i++) {
+			line = reader.readLine();
 			for (int j = 0; j < d2; j++) { // Normaly we dodge the \n at each line
-				pixel = Integer.parseInt(Character.toString(reader.read())); // BIG PROBLEM IT READ 49 NOT 1
+				//pixel = Integer.parseInt(Character.toString(reader.read()));
+				pixel = Integer.parseInt(Character.toString(line.charAt(j)));
 				tab[i][j] = pixel;
 			}
-			reader.read();
 		}
 		return tab;		
 	}
@@ -180,7 +174,6 @@ public class CirclePatch {
 		catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-		c.circlePatch.forEach(x -> System.out.println(x));
 		
 	}
 		
@@ -221,5 +214,22 @@ public class CirclePatch {
 	public ArrayList<Patch> circlePatch()
 	{
 		return circlePatch;
+	}
+	
+	public String toString() {
+		var string = new StringBuilder();
+		// Print the patch of the right side of the table.
+		for(int patch = pawn.currentPosition(); patch < circlePatch.size(); patch++)
+		{
+			string.append(circlePatch.get(patch).toString());
+			string.append("\n");
+		}
+		// Print the patch of the left side of the table.
+		for(int patch = 0; patch < pawn.currentPosition(); patch++)
+		{
+			string.append(circlePatch.get(patch).toString());
+			string.append("\n");
+		}
+		return string.toString();
 	}
 }

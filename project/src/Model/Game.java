@@ -1,7 +1,6 @@
 package Model;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Game {
@@ -13,8 +12,8 @@ public class Game {
 		Objects.requireNonNull(specialPatch);
 		var firstPlayer = new Player("first");
 		var secondPlayer = new Player("second");
-		var timeboard = new Timeboard(firstPlayer, secondPlayer);
-		var circlePatch = new CirclePatch();
+		this.timeboard = new Timeboard(firstPlayer, secondPlayer);
+		this.circlePatch = new CirclePatch();
 		timeboard.initMagicCases(specialPatch);
 		String file = specialPatch ? "phase2.txt" : "phase1.txt";
 		try {
@@ -23,12 +22,13 @@ public class Game {
 		catch (IOException ioe) {
 			ioe.printStackTrace();
 		}		
-		
-		// circlePatch.initNeutralToken();
+		circlePatch.initNeutralToken();
 	}
+	/**
+	 * Acsessor for CirclePatch;
+	 */
 	public CirclePatch circlePatch()
 	{
-		circlePatch.circlePatch().forEach(x -> System.out.println(x));
 		return circlePatch;
 	}
 	

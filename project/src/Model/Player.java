@@ -151,10 +151,14 @@ public class Player {
 	 * @return 
 	 * 			The value is 1 if the pose is not valid othewise 0.
 	 */
-	public int placePatchs(int i, int j) {
-		return quiltboard.putPatch(patch, i, j);
+	public void placePatchs(int i, int j) {
+		 quiltboard.putPatch(patch, i, j);
 	}
 	
+	public int checkPlacePatch(int i, int j)
+	{
+		return quiltboard.checkPutPatch(patch, i, j);
+	}
 	/**
 	 * adds buttons to player button
 	 * 

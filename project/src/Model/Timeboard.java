@@ -101,8 +101,9 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 			{
 				do {
 					coordinates = Interaction.choseCoordinates();	// Chose coordinate.
-					resultPlacement = currentPlayer.placePatchs(coordinates[0], coordinates[1]); // Place the pacth
+					resultPlacement = currentPlayer.checkPlacePatch(coordinates[0], coordinates[1]); // Place the pacth
 				}while(resultPlacement == 1);
+				currentPlayer.placePatchs(coordinates[0], coordinates[1]);
 				cases.replace(caseKey, Case.NEUTRAL); // Remove the special patch.
 			}
 		}
