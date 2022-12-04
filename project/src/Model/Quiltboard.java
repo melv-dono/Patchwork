@@ -144,7 +144,7 @@ public class Quiltboard {
 		int i = 3, j = 3;
 		int tab[][] = {{0, 1}, {1, 1}};
 		Label l = new Label(0, 3, 2);
-		Patch p = new Patch(null, tab);
+		Patch p = new Patch(l, tab);
 		Optional op = q.checkPatchLocation(p, i, j);
 		if (op.isPresent()) {
 			q.putPatch(p, i, j);
@@ -153,7 +153,7 @@ public class Quiltboard {
 			
 		int tab2[][] = {{0, 1}, {1, 1}};
 		Label l2 = new Label(0, 3, 2);
-		Patch p2 = new Patch(null, tab);
+		Patch p2 = new Patch(l2, tab2);
 		Optional op2 = q.checkPatchLocation(p2, 2, 3);
 		if (op2.isPresent()) {
 			q.putPatch(p2, 2, 3);
