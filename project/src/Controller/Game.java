@@ -123,10 +123,8 @@ public class Game {
 	/**
 	 * 
 	 */
-	public void moveForward() {
-		// possiblité d'afficher le menu
-		// possibilité de quitter la fonciton
-		// ne pas oublier de changer le tour du joueur une fois la fonction terminée
+	public void moveForward(Player currentPlayer) {
+		timeboard.advancePlayer(currentPlayer, timeboard.oppenentPlayer(currentPlayer));
 	}
 	
 	/**
@@ -139,10 +137,12 @@ public class Game {
 	/**
 	 * Acsessor for CirclePatch;
 	 */
-	public CirclePatch circlePatch()
-	{
+	public CirclePatch circlePatch(){
 		return circlePatch;
 	}
 	
+	public Timeboard timeboard() {
+		return timeboard;
+	}
 	
 }

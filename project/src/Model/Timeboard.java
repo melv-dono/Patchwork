@@ -100,7 +100,8 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 			else if(cases.get(caseKey) == Case.SPECICAL_PATCH)
 			{
 				do {
-					coordinates = Interaction.choseCoordinates();	// Chose coordinate.
+					
+					String respond = Interaction.choseCoordinates(coordinates);	// Chose coordinate.
 					resultPlacement = currentPlayer.checkPlacePatch(coordinates[0], coordinates[1]); // Place the pacth
 				}while(resultPlacement == 1);
 				currentPlayer.placePatchs(coordinates[0], coordinates[1]);
@@ -151,14 +152,8 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 	 */
 	public Player oppenentPlayer(Player currentPlayer)
 	{
-		if(currentPlayer == firstPlayer)
-		{
-			return secondPlayer;
-		}
-		else
-		{
-			return firstPlayer;
-		}
+		if(currentPlayer == firstPlayer){return secondPlayer;}
+		else{return firstPlayer;}
 	}
 	/**
 	 * Advances the player pawn and overtakes the oppenent.

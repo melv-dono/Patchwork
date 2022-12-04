@@ -7,4 +7,5 @@ public record Coordinate(int x, int y) {
 			throw new IllegalArgumentException();
 		}
 	}
+	
 }
