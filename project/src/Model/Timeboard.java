@@ -119,7 +119,7 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 	/**
 	 *  verify who is next player and modify his turn
 	 */
-	public void whoIsTurn() {
+	public void checkWhoIsTurn() {
 		if(((firstPlayer.turn() == true) && (firstPlayer.currentPosition() > secondPlayer.currentPosition()))
 				|| ((secondPlayer.turn() == true) && (secondPlayer.currentPosition() > firstPlayer.currentPosition())))
 		{
@@ -136,6 +136,14 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 	public String turn()
 	{
 		return turn;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Player currentPlayer() {
+		return (firstPlayer.turn()) ? firstPlayer : secondPlayer;
 	}
 	
 	/**

@@ -1,6 +1,6 @@
 package Model;
 
-
+import java.util.Objects;
 
 /**
  * <b>Player represents a player in the game</b>
@@ -126,20 +126,22 @@ public class Player {
 	
 	/**
 	 * 
+	 */
+	public boolean checkMoney(int price) {
+		if (price < 0) { throw new IllegalArgumentException(); }
+		return (buttons - price >= 0) ? true : false; 
+	}
+	
+	/**
+	 * 
 	 * 
 	 * @see Player#buttons
 	 * @see SimplePatches#price()
 	 * 
 	 */
-	public void buyPatches() {
-		if(buttons < patch.price())
-		{
-			System.err.println("Error : You don't have enough button.\n");
-		}
-		else
-		{
-			buttons = buttons - patch.price();
-		}
+	public void buyPatches(Patch patch) {
+		Objects.requireNonNull(patch);
+		buttons -= patch.price();
 	}
 	
 	/**
@@ -155,9 +157,26 @@ public class Player {
 		 quiltboard.putPatch(patch, i, j);
 	}
 	
-	public int checkPlacePatch(int i, int j)
-	{
-		return quiltboard.checkPutPatch(patch, i, j);
+	
+	/**
+	 * Check if on the quiltboard of the player there is the place
+	 * somewehre to put the current patch
+	 * 
+	 * @param patch
+	 * 
+	 * @return
+	 */
+	public boolean checkPlaceForPatch(Patch patch)	{
+		Objects.requireNonNull(patch);
+		
+		for (int i = 0; i < patch.dimension().length; i++) {
+			for (int j = 0; j < patch.dimension()[0].length; j++) {
+				if (quiltboard.checkPatchLocation(patch, i, j).isPresent()) { // There is enough place
+					return true;
+				}
+			}
+		}
+		return false;		
 	}
 	/**
 	 * adds buttons to player button

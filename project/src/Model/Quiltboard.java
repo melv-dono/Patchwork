@@ -77,33 +77,6 @@ public class Quiltboard {
 	}
 	
 	/**
-	 * Check if given coordinates are valid.
-	 * 
-	 * @param patch
-	 * 			The patch that we put on the quiltboard.
-	 * @param i,j
-	 * 			The uppermost left square is placed on i,j.
-	 * @return 
-	 * 			The value is 1 if the pose is not valid othewise 0; 
-	 */
-	public int checkPutPatch(Patch patch, int i, int j) {
-		int[][] dimensionTmp = patch.dimension();
-		patchKey++;
-		for(int row = i, iPatch = 0; row < (dimensionTmp.length + i); row++, iPatch++)
-		{
-			for(int col = j, jPatch = 0; col < (dimensionTmp[0].length + j); col++, jPatch++)
-			{
-				if(dimension[row][col] == 1)
-				{
-					return 1;
-				}
-			}
-		}
-		IdOfPatch.putIfAbsent(patchKey, patch);
-		return 0;
-	}
-	
-	/**
 	 *  count all the button on the quiltboard and return the current score
 	 *  
 	 *

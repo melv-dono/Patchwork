@@ -2,14 +2,19 @@ package Controller;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Scanner;
 
 import Model.CirclePatch;
+import Model.Patch;
 import Model.Player;
 import Model.Timeboard;
+import View.ViewCirclePatch;
 
 public class Game {
 	private Timeboard timeboard;
 	private CirclePatch circlePatch;
+	private ViewCirclePatch viewCirclePatch;
+	private Scanner sc;
 	
 	
 	/**
@@ -19,7 +24,9 @@ public class Game {
 	public Game() {
 		// Initialisaton de tous les objets du model
 		this.timeboard = new Timeboard(new Player("first"), new Player("second"));
-		this.circlePatch = new CirclePatch();	
+		this.circlePatch = new CirclePatch();
+		viewCirclePatch = new ViewCirclePatch();
+		sc = new Scanner(System.in);
 	}
 	
 	/**
@@ -75,7 +82,42 @@ public class Game {
 	public void buy() {
 		// possiblité d'afficher le menu
 		// possibilité de quitter la fonciton
-		// ne pas oublier de changer le tour du joueur une fois la fonction terminée		
+		// ne pas oublier de changer le tour du joueur une fois la fonction terminée	
+		int rep;
+		Patch currPatch;
+		
+		//listing des patchs achetables
+		viewCirclePatch.displayNextPaches(circlePatch.nextPatches());
+	
+		do {//selection par le joueur
+			rep = Integer.parseInt(sc.nextLine());
+		}while (rep < 0 || rep > 3); 
+		
+		currPatch = circlePatch.nextPatches().get(rep);
+		
+		//checking if the player have money
+		if (timeboard.currentPlayer().checkMoney(currPatch.price())) {
+			
+			// on renvoie l'indice, on bouge le token et on supp le patch de la liste
+			
+		
+			// ce patch est sauvegardé et on le donne au joueur pour qu'il réalise 2 opérations
+		
+				// placer le patch ATTENTION BIG TROUBLE
+		
+				// payer le patch			
+			
+			// Once token place we move the neutral token
+			circlePatch.swapPatch(rep);
+			
+			// We substract money from player's bank of buttons
+			timeboard.currentPlayer().buyPatches(currPatch);
+		}
+		else {
+			System.out.println("Vous n'avez pas assez d'argent");
+		}
+
+		
 	}
 	
 	/**
