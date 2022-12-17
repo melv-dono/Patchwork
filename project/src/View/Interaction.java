@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Scanner;
 
 import Controller.Game;
@@ -49,28 +50,29 @@ public class Interaction {
 	}
 	
 	/**
-	 * Afficher les actions possible du style rotate flip poser son patch
-	 */
-	public void actionPossible() {
-		
-	}
-	
-	/**
 	 * Ask the user which version of the game he wants to play
 	 */
+	//TODO
 	public static int choosePhase() {
 		return 0;
 	}
+	
 	/**
-	 * 
+	 * Asks the user to choose a patch
 	 * @return
 	 */
-	public static int chosePatch()
-	{
+	//TODO
+	public static int chosePatch()	{
 		return 0;
 	}
-	public static String choseCoordinates(int[] coordinate)
-	{
+	
+	/**
+	 * 
+	 * @param coordinate
+	 * @return
+	 */
+	public static String choseCoordinates(int[] coordinate)	{
+		Objects.requireNonNull(coordinate);
 		try ( Scanner scanner = new Scanner( System.in )) {
 			while(true) {
 				System.out.println(commandPatch);
@@ -97,8 +99,13 @@ public class Interaction {
         }
 	}
 	
-	public static boolean checkCoordinates(int[] coordinate)
-	{
+	/**
+	 * 
+	 * @param coordinate
+	 * @return
+	 */
+	public static boolean checkCoordinates(int[] coordinate) {
+		Objects.requireNonNull(coordinate);
 		if((coordinate[0] < 0 || coordinate[0] > 7)
 				|| ((coordinate[1] < 0) || coordinate[1] > 7)) {
 			return false;
@@ -106,6 +113,9 @@ public class Interaction {
 		return true;
 	}
 
+	/**
+	 * Clean the console
+	 */
 	public static void cleanConsole() {
 		// Command to clean console. 
         System.out.print("\033[H\033[2J");

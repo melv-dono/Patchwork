@@ -1,5 +1,21 @@
 package Model;
 
+/**
+ * <b>Quiltboard represents the array that own a player</b>
+ * <p>
+ * Quiltboard is characterized by :
+ * <ul>
+ * <li>dimension : refers to the representation of it</li>
+ * <li>cols : the number of cols it owns</li>
+ * <li>rows : the number of rows it owns</li>
+ * <li>patchKey : refers to the ènieme patch which have been put</li>
+ * <li>IdOfPatch : list all the patches owns by the quiltboard linked by their index</li>
+ * </ul>
+ * </p>
+ * <p>
+ * @author Mickaël RAKOTOARISON, Melvyn NZENGA.
+ */
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -66,6 +82,9 @@ public class Quiltboard {
 	 * 			The value is 1 if the pose is not valid othewise 0; 
 	 */
 	public void putPatch(Patch patch, int i, int j) {
+		Objects.requireNonNull(patch);
+		if (i < 0 || j < 0) { throw new IllegalArgumentException(); }
+		
 		List<Coordinate> pos = patch.realLocation();
 		
 		patchKey++;
@@ -79,6 +98,8 @@ public class Quiltboard {
 	/**
 	 *  count all the button on the quiltboard and return the current score
 	 *  
+	 *  @return
+	 *  		current nbr of buttons on the quiltboard
 	 *
 	 */
 	public int countScore() {
@@ -90,9 +111,6 @@ public class Quiltboard {
 		return result;
 	}
 	
-	/**
-	 * Print of the quiltboard.
-	 */
 	@Override
 	public String toString()
 	{

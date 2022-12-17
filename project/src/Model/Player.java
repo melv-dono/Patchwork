@@ -7,8 +7,8 @@ import java.util.Objects;
  * <p>
  * A player is characterized by :
  * <ul>
- * <li>This name.</li>
- * <li>This turn in game, true if it is turn otherwise false.</li>
+ * <li>His name.</li>
+ * <li>His turn in game, true if it is turn otherwise false.</li>
  * <li>A list of buttons that contains the buttons it has won.</li>
  * <li>A Quiltboard on which the player places these fabrics.</li>
  * <li>A pawn that the player moves.</li>
@@ -95,17 +95,18 @@ public class Player {
 	}
 	
 	/**
-	 * moves the pawn according to the cases parameter
+	 * Moves the pawn according to the cases parameter
 	 * 
 	 * @param cases
 	 * 				number of movement case.
 	 */
 	public void movePawn(int cases) {
+		if (cases < 0 || cases > 48) { throw new IllegalArgumentException(); }
 		pawn.movePawn(cases);
 	}
 	
 	/**
-	 * change the current turn of the player if he plays or not.
+	 * Change the current turn of the player if he plays or not.
 	 * 
 	 * @see Player#turn
 	 */
@@ -113,9 +114,8 @@ public class Player {
 		turn = (turn == true) ? false : true;
 	}
 	
-	
 	/**
-	 * count the total score of the player
+	 * Count the total score of the player
 	 * 
 	 * @see Quiltboard#countScore()
 	 * @see Player#scoreButton()
@@ -125,7 +125,16 @@ public class Player {
 	}
 	
 	/**
+	 * Check is the player have enough money (buttons)
 	 * 
+	 * @param price
+	 * 		number of buttons that cost a patch
+	 * 
+	 * @see Game#buy()
+	 * 
+	 * @return
+	 * 		true when the player have enough buttons
+	 * 		false otherwise
 	 */
 	public boolean checkMoney(int price) {
 		if (price < 0) { throw new IllegalArgumentException(); }
@@ -133,7 +142,11 @@ public class Player {
 	}
 	
 	/**
+	 * Subtract the number of buttons required 
+	 * In order to purchase the patch
 	 * 
+	 * @param patch
+	 * 		current patch we want to buy
 	 * 
 	 * @see Player#buttons
 	 * @see SimplePatches#price()
@@ -157,41 +170,23 @@ public class Player {
 		 quiltboard.putPatch(patch, i, j);
 	}
 	
-	
 	/**
-	 * Check if on the quiltboard of the player there is the place
-	 * somewehre to put the current patch
+	 * Adds buttons to player button
 	 * 
-	 * @param patch
-	 * 
-	 * @return
-	 */
-	public boolean checkPlaceForPatch(Patch patch)	{
-		Objects.requireNonNull(patch);
-		
-		for (int i = 0; i < patch.dimension().length; i++) {
-			for (int j = 0; j < patch.dimension()[0].length; j++) {
-				if (quiltboard.checkPatchLocation(patch, i, j).isPresent()) { // There is enough place
-					return true;
-				}
-			}
-		}
-		return false;		
-	}
-	/**
-	 * adds buttons to player button
+	 * @param buttonWin
+	 * 		number of buttons that the player earned
 	 * 
 	 * @see Player#buttons
 	 */
 	public void earnButton(int buttonWin) {
+		if (buttonWin < 0) { throw new IllegalArgumentException(); }
 		buttons += buttonWin;
 	}
 	
 	/**
-	 * add player quiltboard buttons in player buttons. 
+	 * Add player ears buttons coming from those present on his quiltboard. 
 	 */
-	public void earnButtonQuiltboard()
-	{
+	public void earnButtonQuiltboard() {
 		buttons += quiltboard.countScore();
 	}
 	
@@ -205,45 +200,51 @@ public class Player {
 	}
 	
 	/**
-	 * Acessor for name.
+	 * Getter for name.
 	 */
-	public String name()
-	{
+	public String name() {
 		return name;
 	}
 	
 	/**
+	 * Gives the currentPositioin of the player's pawn
 	 * 
 	 * @return
-	 * 			int position of the pawn on the TimeBoard.
+	 * 		 position of the pawn on the TimeBoard.
 	 */
-	public int currentPosition()
-	{
+	public int currentPosition() {
 		return pawn.currentPosition();
 	}
 	
 	/**
-	 * @return boolean true if the turn is for this player else false.
+	 * Getter for turn
+	 * 
+	 * @return 
+	 * 		true if the turn is for this player else false.
 	 */
 	public boolean turn() {
 		return turn;
 	}
+	
 	/**
-	 * change the patch for the patch that the player chose.
+	 * Change the patch for the patch that the player chose.
+	 * 
 	 * @param 
-	 * 			thisPatch The chosen patch.
+	 * 		thisPatch The chosen patch.
 	 */
-	public void patchChose(Patch thisPatch)
-	{
+	public void patchChose(Patch thisPatch)	{
+		Objects.requireNonNull(thisPatch);
 		patch = thisPatch;
 	}
 	
 	/**
-	 * Accessor for the chosen patch.
+	 * Getter for the chosen patch.
 	 * 
+	 * @return
+	 * 		the currentPatch that the player need to place
+	 * 		on his quiltboard
 	 */
-	public Patch patch()
-	{
+	public Patch patch() {
 		return patch;
 	}
 }

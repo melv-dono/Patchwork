@@ -16,11 +16,6 @@ public class Game {
 	private ViewCirclePatch viewCirclePatch;
 	private Scanner sc;
 	
-	
-	/**
-	 * 
-	 * @param specialPatch
-	 */
 	public Game() {
 		// Initialisaton de tous les objets du model
 		this.timeboard = new Timeboard(new Player("first"), new Player("second"));
@@ -30,7 +25,9 @@ public class Game {
 	}
 	
 	/**
+	 * Initialize every object of the model and the view
 	 * 
+	 * @param specialPatch
 	 */
 	public void init(boolean specialPatch) {
 		Objects.requireNonNull(specialPatch);
@@ -48,9 +45,8 @@ public class Game {
 		circlePatch.initNeutralToken(); // mettre cette fonctigon dans l'initialisation générale de circlePatch
 	}
 	
-	
 	/**
-	 * 
+	 * TODO
 	 */
 	public void runGame() {
 		// Execute une boucle while sur perform turn tant qu'il n'y a pas de condition d'arret
@@ -60,7 +56,7 @@ public class Game {
 	
 	
 	/**
-	 * 
+	 * TODO
 	 */
 	public void performTurn() {
 		// 3 options : Achat, Avancer, afficher menu
@@ -77,7 +73,7 @@ public class Game {
 	
 	
 	/**
-	 * 
+	 * Perform every operation to buy an item
 	 */
 	public void buy() {
 		// possiblité d'afficher le menu
@@ -116,19 +112,17 @@ public class Game {
 		else {
 			System.out.println("Vous n'avez pas assez d'argent");
 		}
-
-		
 	}
 	
 	/**
-	 * 
+	 * TODO
 	 */
 	public void moveForward(Player currentPlayer) {
 		timeboard.advancePlayer(currentPlayer, timeboard.oppenentPlayer(currentPlayer));
 	}
 	
 	/**
-	 * 
+	 * TODO
 	 */
 	public void menu() {
 		
@@ -144,5 +138,4 @@ public class Game {
 	public Timeboard timeboard() {
 		return timeboard;
 	}
-	
 }

@@ -15,33 +15,9 @@ import java.util.Objects;
  * <li>This layout and dimension thanks to Int[][], 1 represent case in the tab.</li>
  * </ul>
  * </p>
- * <p>
  * @author Mickaël RAKOTOARISON, Melvyn NZENGA.
  */
 public class Patch {
-	/**
-	 * number of button in the patch, this number must be positive.
-	 * 
-	 * @see Patch#Patches(String)
-	 */
-//	private final int nbrButtons;
-	
-	/**
-	 * price of the button, this number must be positive, the program check
-	 * if the player have enough of button.
-	 * 
-	 * @see Patch#Patches(String)
-	 */
-//	private final int price;
-	
-	/**
-	 * number of case that the player must make when buying patches.
-	 * 
-	 * @see Patch#Patches(String)
-	 */
-//	private final int spaces;
-	
-	
 	
 	/**
 	 * Represent all the informations you need to  know for a patch
@@ -75,17 +51,18 @@ public class Patch {
      */
 	public Patch(Label label, int[][] dimension) {
 		this.dimension = Objects.requireNonNull(dimension);
-		this.label = label;
+		this.label = Objects.requireNonNull(label);
 	}
 	
 	/**
-	 * change the {@link Patch#dimension} array to another array
+	 * Change the {@link Patch#dimension} array to another array
 	 * in which the rotation is performed.
 	 * 
 	 * @param direction
 	 * 				The direction of the rotation, 1 for left rotation otherwise -1 for right rotation. 
 	 */
 	public void rotate(int direction) {
+		if (direction != 1 && direction != -1) { throw new IllegalArgumentException(); }
 		int k = switch (direction) {
 		case -1: {
 			yield dimension.length - 1;
@@ -108,12 +85,11 @@ public class Patch {
 	}
 	
 	/**
-	 * change the {@link Patch#dimension} array to another array
+	 * Change the {@link Patch#dimension} array to another array
 	 * in which the flip is performed.
 	 *  
 	 */
-	public void flip()
-	{
+	public void flip()	{
 		int copy[][] = new int[dimension.length][dimension[0].length];
         for(int i = 0; i < dimension.length; i++)
         {
@@ -126,51 +102,49 @@ public class Patch {
 	}
 	
 	/**
-	 * Accessor for price.
+	 * Getter for price.
 	 */
-	public int price()
-	{
+	public int price() {
 		return label.price();
 	}
 	
 	/**
-	 * Accessor for Number of button.
+	 * Getter for Number of button.
 	 */
-	public int buttons()
-	{
+	public int buttons() {
 		return label.button();
 	}
 	
 	/**
-	 * Accessor for Number of case.
+	 * Getter for Number of case.
 	 */
-	public int movement()
-	{
+	public int movement() {
 		return label.movement();
 	}
 	
 	/**
-	 * Accessor for patch's label.
+	 * Getter for patch's label.
 	 */
 	public Label label() {
 		return label;
 	}
 	
 	/**
-	 * Accessor for the patch's area
+	 * Getter for the patch's area
+	 * 
+	 * @see CirclePatch#initNeutralToken()
 	 * 
 	 * @return 
-	 * 		int value representing the area of the current patch
+	 * 		value representing the area of the current patch
 	 */
 	public int area() {
 		return dimension.length * dimension[0].length;
 	}
 	
 	/**
-	 * Accessor for dimension.
+	 * Getter for dimension.
 	 */
-	public int[][] dimension()
-	{
+	public int[][] dimension() {
 		return dimension;
 	}
 	

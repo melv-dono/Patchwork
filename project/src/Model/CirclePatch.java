@@ -1,5 +1,18 @@
 package Model;
 
+/**
+ * <b>CirclePatch represents all the patch around the timeboard</b>
+ * <p>
+ * CirclePatch is characterized by :
+ * <ul>
+ * <li>Pawn : refers to the neutral token</li>
+ * <li>CirclePatch : refers the list of patch disponible in the game</li>
+ * </ul>
+ * </p>
+ * <p>
+ * @author Mickaël RAKOTOARISON, Melvyn NZENGA.
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.nio.file.Path;
@@ -8,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -19,7 +33,7 @@ public class CirclePatch {
 	private final Pawn pawn;
 	
 	/**
-	 * 
+	 * List of every patch disponible in the game
 	 */
 	private final ArrayList<Patch> circlePatch;
 	
@@ -53,7 +67,7 @@ public class CirclePatch {
 	 * Generate all the patches for a given phase
 	 * 
 	 * @throws 
-	 * 			IOException
+	 * 		IOException
 	 * 
 	 * @param folder
 	 * 				refers to the package to search for data
@@ -65,8 +79,9 @@ public class CirclePatch {
 	 */
 	
 	public void initCirclePatch(String folder, int sizeFolder, int iteration) throws IOException {
-		Path path = Paths.get(folder);
-		/*Path path = Path.of("src/data").resolve(folder);*/
+		Objects.requireNonNull(folder);
+		if (sizeFolder < 0 || iteration < 0) { throw new IllegalArgumentException(); }
+		Path path = Paths.get(folder); 
 		int lineRemaining = 3000; 
 
 		try (BufferedReader reader = Files.newBufferedReader(path); ) {
@@ -96,6 +111,8 @@ public class CirclePatch {
 	 * 			an object patch create from the data of the file in parameter
 	 */
 	public Patch createPatch(BufferedReader reader, Path path) throws IOException {
+		Objects.requireNonNull(reader);
+		Objects.requireNonNull(path);
 		int data[] = readPatchData(reader, path);
 		int tab[][] = readPatchTab(reader, path, data[0], data[1]);
 		return new Patch(new Label(data[2], data[3], data[4]), tab);
@@ -110,12 +127,15 @@ public class CirclePatch {
 	 * 			IOException
 	 * 
 	 * @param path
+	 * 			Path to the file we want to read	
 	 * 
 	 * @return
 	 * 			a tab of in containing every information about the patch's data 
 	 * 			in the order of apparition
 	 */
 	public int[] readPatchData(BufferedReader reader, Path path) throws IOException {
+		Objects.requireNonNull(reader);
+		Objects.requireNonNull(path);
 		int patchInfo[] = new int[5];
 		String line;
 			
@@ -150,6 +170,9 @@ public class CirclePatch {
 	 * 			a tab representing the shape of the patch
 	 */
 	public int[][] readPatchTab(BufferedReader reader, Path path, int d1, int d2) throws IOException {
+		Objects.requireNonNull(reader);
+		Objects.requireNonNull(path);
+		if (d1 < 0 || d2 < 0) { throw new IllegalArgumentException(); }
 		int tab[][] = new int[d1][d2];
 		Integer pixel;
 		String line;
@@ -167,32 +190,37 @@ public class CirclePatch {
 	
 	/*JUSTE POUR QUELQUES TESTS À ÉFFACER*/
 	public static void main(String[] args) {
-		var c = new CirclePatch();
+		/*var c = new CirclePatch();
 		
 		try {
 			c.initCirclePatch("phase2.txt", 33, 1);				
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
-		}
+		}*/
+		System.out.println("Work in progress...");
 		
 	}
 		
 	/**
-	 * copies the patch chosen by the player thanks to choosePatch()
+	 * Copies the patch chosen by the player thanks to choosePatch()
 	 * then gives the possibility to the player to place it on the quilboard. 
 	 * 
-	 * @param int of the next pacth select.
+	 * @param next
+	 * 		int of the next pacth select.
 	 * 
 	 * @return Patch the copy of the patch of the player choose.
 	 */
 	public Patch selectNextPatch(int next) {
+		if (next < 0) { throw new IllegalArgumentException(); }
 		return circlePatch.get(next);
 	}
 	
 	/**
 	 * List of next 3 purchasable patches
 	 * 
+	 * @return
+	 * 		a list of the 3 next purchasable patches 
 	 */
 	public List<Patch> nextPatches() {
 		int index;
@@ -205,15 +233,23 @@ public class CirclePatch {
 	}
 	
 	/**
-	 * Move the pawn on the chosen patch and remove ot.
+	 * Move the pawn on the chosen patch and remove it.
 	 */
 	public void swapPatch(int index) {
+		if (index < 0 || index > circlePatch.size()) { 
+			throw new IllegalArgumentException();
+		}
 		pawn.movePawn(index);
 		circlePatch.remove(index);
 	}
 	
-	public ArrayList<Patch> circlePatch()
-	{
+	/**
+	 * Getter for circlePatch
+	 * 
+	 * @return
+	 * 		Full list of every patch available
+	 */
+	public ArrayList<Patch> circlePatch() {
 		return circlePatch;
 	}
 	

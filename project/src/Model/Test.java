@@ -33,8 +33,8 @@ public class Test {
 				indexPatch = Interaction.chosePatch();
 				currentPlayer.patchChose(circlePatch.selectNextPatch(indexPatch));
 				do {
-					coordinates = Interaction.choseCoordinates();
-					resultPlacement = currentPlayer.checkPlacePatch(coordinates[0], coordinates[1]);
+					//coordinates = Interaction.choseCoordinates();
+					//resultPlacement = currentPlayer.checkPlacePatch(coordinates[0], coordinates[1]);
 					// C'ant place patch. 
 					if(resultPlacement == -1)
 					{
@@ -52,7 +52,7 @@ public class Test {
 					currentPlayer.placePatchs(coordinates[0], coordinates[1]);
 					int start = currentPlayer.currentPosition(); // The start of the movement.
 					int end = currentPlayer.patch().movement(); // The end of the movement.
-					currentPlayer.buyPatches();	// Subtract the button of the player suits of patch.
+					//currentPlayer.buyPatches();	// Subtract the button of the player suits of patch.
 					timeboard.checkCurrentPostionPlayer(currentPlayer, start, end); // Performs the different action of each case traveled.
 					currentPlayer.movePawn(currentPlayer.patch().movement());	// move the pawn.
 					circlePatch.swapPatch(indexPatch);

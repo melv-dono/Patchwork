@@ -32,37 +32,31 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 		Case caseValue;
 		for(int idCase = 1; idCase <= NBR_CASE; idCase++)
 		{
-			if(idCase % 6 == 0)
-			{
+			if(idCase % 6 == 0)	{ 
 				caseValue = Case.BUTTON;
 			}
-			else if(((idCase >= 21) && ((idCase - 21) % 6 == 0)) && specialPatch)
-			{
+			else if(((idCase >= 21) && ((idCase - 21) % 6 == 0)) && specialPatch) 	{
 				caseValue = Case.SPECICAL_PATCH;
 			}
-			else
-			{
+			else {
 				caseValue = Case.NEUTRAL;
 			}
 			cases.put(idCase,caseValue);
 		}
 	}
-	public String toString()
-	{
+	
+	@Override
+	public String toString() {
 		var string = new StringBuilder();
-		for(var entry:cases.entrySet())
-		{				
+		for(var entry:cases.entrySet()) {				
 			if((firstPlayer.currentPosition() == secondPlayer.currentPosition())
-					&& (entry.getKey() == firstPlayer.currentPosition()))
-			{
+					&& (entry.getKey() == firstPlayer.currentPosition())) {
 					string.append(turn.charAt(0));
 			}
-			else if(entry.getKey() == firstPlayer.currentPosition())
-			{
+			else if(entry.getKey() == firstPlayer.currentPosition()) 	{
 				string.append(firstPlayer.name().charAt(0));
 			}
-			else if(entry.getKey() == secondPlayer.currentPosition())
-			{
+			else if(entry.getKey() == secondPlayer.currentPosition()) {
 				string.append(secondPlayer.name().charAt(0));
 			}
 			else if(entry.getValue() == Case.NEUTRAL) {
@@ -75,8 +69,7 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 				string.append("*");
 			}
 			
-			if(entry.getKey() % 7 == 0)
-			{
+			if(entry.getKey() % 7 == 0) {
 				string.append("\n");
 			}
 		}
@@ -84,31 +77,30 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 		return string.toString();
 		
 	}
+	
 	public void performTurn() {
 		
 	}
+	
 	/*TODO : check if a player is on a magic case*/
 	public void checkCurrentPostionPlayer(Player currentPlayer, int start, int end) {
 		int resultPlacement = 1;
 		int[] coordinates = new int[2];
-		for(int caseKey = start; caseKey < end; caseKey++)
-		{
-			if(cases.get(caseKey) == Case.BUTTON)
-			{
+		for(int caseKey = start; caseKey < end; caseKey++) {
+			if(cases.get(caseKey) == Case.BUTTON) {
 				currentPlayer.earnButtonQuiltboard();	//earn the button on the quiltboard
 			}
-			else if(cases.get(caseKey) == Case.SPECICAL_PATCH)
-			{
+			else if(cases.get(caseKey) == Case.SPECICAL_PATCH) {
 				do {
 					
 					String respond = Interaction.choseCoordinates(coordinates);	// Chose coordinate.
-					resultPlacement = currentPlayer.checkPlacePatch(coordinates[0], coordinates[1]); // Place the pacth
+					//resultPlacement = currentPlayer.checkPlacePatch(coordinates[0], coordinates[1]); // Place the pacth
 				}while(resultPlacement == 1);
 				currentPlayer.placePatchs(coordinates[0], coordinates[1]);
 				cases.replace(caseKey, Case.NEUTRAL); // Remove the special patch.
 			}
 		}
-		whoIsTurn();	// check who is next.
+		checkWhoIsTurn();	// check who is next.
 	}
 	
 	/*TODO : check if all the player currentPosition is at the end
@@ -122,8 +114,7 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 	 */
 	public void checkWhoIsTurn() {
 		if(((firstPlayer.turn() == true) && (firstPlayer.currentPosition() > secondPlayer.currentPosition()))
-				|| ((secondPlayer.turn() == true) && (secondPlayer.currentPosition() > firstPlayer.currentPosition())))
-		{
+				|| ((secondPlayer.turn() == true) && (secondPlayer.currentPosition() > firstPlayer.currentPosition())))	{
 			firstPlayer.changeTurn();
 			secondPlayer.changeTurn();
 		}
@@ -134,8 +125,7 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 	 *  Assessor for turn. 
 	 * 
 	 */
-	public String turn()
-	{
+	public String turn() {
 		return turn;
 	}
 	
@@ -150,18 +140,24 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 	/**
 	 * return the oppenent of the cureent player.
 	 */
-	public Player oppenentPlayer(Player currentPlayer)
-	{
-		if(currentPlayer == firstPlayer){return secondPlayer;}
-		else{return firstPlayer;}
+
+	public Player oppenentPlayer(Player currentPlayer)	{
+		Objects.requireNonNull(currentPlayer);
+		if(currentPlayer == firstPlayer) {
+			return secondPlayer;
+		}
+		else {
+			return firstPlayer;
+		}
 	}
 	/**
 	 * Advances the player pawn and overtakes the oppenent.
 	 */
-	public void advancePlayer(Player currentPlayer, Player oppenentPlayer)
-	{
+	public void advancePlayer(Player currentPlayer, Player opponentPlayer) 	{
+		Objects.requireNonNull(currentPlayer);
+		Objects.requireNonNull(opponentPlayer);
 		int start = currentPlayer.currentPosition();
-		int end = oppenentPlayer.currentPosition() + 1;
+		int end = opponentPlayer.currentPosition() + 1;
 		currentPlayer.movePawn(end);
 		checkCurrentPostionPlayer(currentPlayer, start, end);	
 	}

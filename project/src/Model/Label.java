@@ -1,14 +1,13 @@
 package Model;
 
 /**
- * <b>Patches represents a patch in the game</b>
+ * <b>Label represents all the informations regarding a specific patch</b>
  * <p>
- * A patch is characterized by :
+ * THis record is characterized by:
  * <ul>
- * <li>This number of button.</li>
- * <li>This price, the player need "price" button to buy the patch.</li>
- * <li>This number of cases, The player must move this pawn to suit this variable when they buy patches.</li>
- * <li>This layout and dimension thanks to Int[][], 1 represent case in the tab.</li>
+ * <li>button : the number of buttons that the patch owns</li>
+ * <li>price : it refers to the number of button to give in order to purchase a patch</li>
+ * <li>movement : the number of case you need to cross with your pawn</li>
  * </ul>
  * </p>
  * <p>
@@ -16,25 +15,6 @@ package Model;
  */
 
 public record Label(int button, int price, int movement) {
-	
-	/**
-	 * number of button in the patch, this number must be positive.
-	 * 
-	 * @see Patches#Patches(String)
-	 */
-	
-	/**
-	 * price of the button, this number must be positive, the program check
-	 * if the player have enough of button.
-	 * 
-	 * @see Patches#Patches(String)
-	 */
-	
-	/**
-	 * number of case that the player must make when buying patches.
-	 * 
-	 * @see Patches#Patches(String)
-	 */
 	
 	public Label {
 		if (button < 0 || price < 0 || movement < 0) {
