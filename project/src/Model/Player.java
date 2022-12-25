@@ -1,6 +1,8 @@
 package Model;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * <b>Player represents a player in the game</b>
@@ -86,7 +88,7 @@ public class Player {
      */
 	public Player(String name) {
 		this.name = name;
-		this.buttons = 0;
+		this.buttons = 5;
 		this.quiltboard = new Quiltboard();
 		this.pawn = new Pawn(1);
 		this.turn = false;
@@ -205,6 +207,14 @@ public class Player {
 	public String name() {
 		return name;
 	}
+
+	/**
+	 * Getter for quiltboard.
+	 */
+	public Quiltboard quiltboard() {
+		return quiltboard;
+	}
+
 	
 	/**
 	 * Gives the currentPositioin of the player's pawn
@@ -246,5 +256,25 @@ public class Player {
 	 */
 	public Patch patch() {
 		return patch;
+	}
+	
+	/**
+	 * Check if the coordinate chose by the player is valid
+	 * on the quiltBoard.
+	 * 
+	 * @param
+	 * 		int arrays contains i, j the coordinate who the player want to put the patch.
+	 */
+	public boolean checkPutPatch(int i, int j) {
+		Optional<List<Coordinate>> op = quiltboard.checkPatchLocation(patch, i, j);
+		return op.isPresent();
+	}
+	
+	@Override
+	public String toString() {
+		var string = new StringBuilder();
+		string.append("NAME CURRENT PLAYER : " + name + "\n");
+		string.append("NUMBER OF BUTTON : " + buttons + "\n");
+		return string.toString();
 	}
 }

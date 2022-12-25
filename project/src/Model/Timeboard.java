@@ -19,7 +19,6 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 	public Timeboard(Player firstPlayer, Player secondPlayer) {
 		this.firstPlayer = firstPlayer;
 		this.secondPlayer = secondPlayer;
-		this.turn = secondPlayer.name();
 		this.cases = new HashMap<Integer, Case>();
 	}
 	
@@ -51,7 +50,8 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 		for(var entry:cases.entrySet()) {				
 			if((firstPlayer.currentPosition() == secondPlayer.currentPosition())
 					&& (entry.getKey() == firstPlayer.currentPosition())) {
-					string.append(turn.charAt(0));
+					string.append(firstPlayer.turn() ? firstPlayer.name().charAt(0) :
+						secondPlayer.name().charAt(0));
 			}
 			else if(entry.getKey() == firstPlayer.currentPosition()) 	{
 				string.append(firstPlayer.name().charAt(0));
@@ -78,47 +78,54 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 		
 	}
 	
-	public void performTurn() {
-		
-	}
 	
 	/*TODO : check if a player is on a magic case*/
 	public void checkCurrentPostionPlayer(Player currentPlayer, int start, int end) {
-		int resultPlacement = 1;
-		int[] coordinates = new int[2];
-		for(int caseKey = start; caseKey < end; caseKey++) {
+		char respondAction = 0;
+		int[] coordinate = new int[2];
+		for(int caseKey = start; caseKey <= end; caseKey++) {
 			if(cases.get(caseKey) == Case.BUTTON) {
 				currentPlayer.earnButtonQuiltboard();	//earn the button on the quiltboard
 			}
 			else if(cases.get(caseKey) == Case.SPECICAL_PATCH) {
 				do {
-					
-					String respond = Interaction.choseCoordinates(coordinates);	// Chose coordinate.
-					//resultPlacement = currentPlayer.checkPlacePatch(coordinates[0], coordinates[1]); // Place the pacth
-				}while(resultPlacement == 1);
-				currentPlayer.placePatchs(coordinates[0], coordinates[1]);
+					Interaction.cleanConsole();
+					System.out.println(currentPlayer.quiltboard().toString());
+					System.out.println("Give the coordinate (i, j) for the special patch.");
+					respondAction = Interaction.choseCoordinates(coordinate);
+					if(respondAction == 'C'){
+						if(currentPlayer.checkPutPatch(coordinate[0], coordinate[1])) {
+							break;
+						}
+					}
+				}while(true);
+				currentPlayer.placePatchs(coordinate[0], coordinate[1]);
 				cases.replace(caseKey, Case.NEUTRAL); // Remove the special patch.
 			}
 		}
-		checkWhoIsTurn();	// check who is next.
+
 	}
-	
-	/*TODO : check if all the player currentPosition is at the end
-	 * Warning maybe this method is not in the right place*/
-	public boolean endGame() {
-		return false;
+	/**
+	 *  check if all the player currentPosition is at the end
+	 * 
+	 * @return
+	 * 		true if the end game else false
+	 */
+	public boolean NotEndGame() {
+		return (!((firstPlayer.currentPosition() == NBR_CASE) ||
+				secondPlayer.currentPosition() == NBR_CASE));
 	}
 	
 	/**
 	 *  verify who is next player and modify his turn
 	 */
 	public void checkWhoIsTurn() {
+		
 		if(((firstPlayer.turn() == true) && (firstPlayer.currentPosition() > secondPlayer.currentPosition()))
 				|| ((secondPlayer.turn() == true) && (secondPlayer.currentPosition() > firstPlayer.currentPosition())))	{
 			firstPlayer.changeTurn();
 			secondPlayer.changeTurn();
 		}
-		
 	}
 	
 	/**
@@ -152,14 +159,21 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 	}
 	/**
 	 * Advances the player pawn and overtakes the oppenent.
+	 * 
+	 * @param
+	 * 		currentPlayer The player who advence.
+	 * @param
+	 * 		opponentPlayer The opponent player oftThe player who advence.
 	 */
 	public void advancePlayer(Player currentPlayer, Player opponentPlayer) 	{
 		Objects.requireNonNull(currentPlayer);
 		Objects.requireNonNull(opponentPlayer);
 		int start = currentPlayer.currentPosition();
 		int end = opponentPlayer.currentPosition() + 1;
-		currentPlayer.movePawn(end);
 		checkCurrentPostionPlayer(currentPlayer, start, end);	
+		currentPlayer.movePawn(end - start);
+		currentPlayer.earnButton(end - start);
+		checkWhoIsTurn();	// check who is next and change the value of player turn.
 	}
 
 }

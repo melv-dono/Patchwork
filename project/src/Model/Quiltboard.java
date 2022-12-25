@@ -66,7 +66,7 @@ public class Quiltboard {
 		List<Coordinate> pos = patch.realLocation();
 		for (int k = 0; k < pos.size(); k++ ) {
 			// Case when there is already a patch on the given location
-			if (dimension[i + pos.get(k).x()][j + pos.get(k).y()] == 1) { return Optional.ofNullable(null); }
+			if (dimension[i + pos.get(k).x()][j + pos.get(k).y()] != 0) { return Optional.empty(); }
 		}
 		return Optional.of(pos);
 	}
@@ -84,14 +84,11 @@ public class Quiltboard {
 	public void putPatch(Patch patch, int i, int j) {
 		Objects.requireNonNull(patch);
 		if (i < 0 || j < 0) { throw new IllegalArgumentException(); }
-		
 		List<Coordinate> pos = patch.realLocation();
-		
 		patchKey++;
 		for (int k = 0; k < pos.size(); k++) {
 			dimension[i + pos.get(k).x()][j + pos.get(k).y()] = patchKey;
 		}
-		
 		IdOfPatch.putIfAbsent(patchKey, patch);
 	}
 	

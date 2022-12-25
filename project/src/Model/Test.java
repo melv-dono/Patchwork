@@ -28,7 +28,7 @@ public class Test {
 		}
 		while(currentPlayer.turn())
 		{
-			if(Interaction.advanceOrTake() == 0)
+			if(Interaction.advanceOrTake(null) == 0)
 			{
 				indexPatch = Interaction.chosePatch();
 				currentPlayer.patchChose(circlePatch.selectNextPatch(indexPatch));

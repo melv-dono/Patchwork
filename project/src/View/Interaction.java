@@ -12,6 +12,7 @@ import Model.Coordinate;
 
 public class Interaction {
 	private static final String commandBuy = "BUY PATCH : press 'B' and ENTER";
+	private static final String commandQuit = "QUIT GAME : press 'Q' and ENTER";
 	private static final String commandAdvences = "ADVANCES : press 'A' and ENTER";
 	private static final String commandQuiltBoard = "SHOW QUILTBOARD : press 'Q' and ENTER";
 	private static final String commandCirclePatch = "SHOW CIRCLE PACTH : press 'C' and ENTER";
@@ -21,33 +22,29 @@ public class Interaction {
 	private static final String commandFlip = "FLIP THE PATCH : press 'F' and ENTER";
 	private static final String commandCoor = "CHOSE COORDINATE : i j and ENTER (ex : 0 1)";
 	private static final String error = "Error : to make a choice you must enter one of the commands bellow";
-	private static final List<String> commandPatch = Arrays.asList(commandRotateL,commandRotateR, commandFlip);
-	private static final List<String> commandList = Arrays.asList(commandBuy, commandAdvences,
-			commandQuiltBoard, commandCirclePatch, commandTimeboard);
+	private static final List<String> commandPatch = Arrays.asList(commandRotateL,commandRotateR, commandFlip, commandCoor, commandQuit);
+	private static final List<String> commandListAction = Arrays.asList(commandBuy, commandAdvences, commandQuit);
 
-
+	private static final Scanner scanner = new Scanner(System.in);
 	public static int advanceOrTake(){
-		try ( Scanner scanner = new Scanner( System.in )) {
-			while(true) {
-	        	commandList.stream().forEach(commandLine -> System.out.println(commandLine));
-	        	String command = scanner.nextLine();
-	        	command.toUpperCase(Locale.ROOT);
-	        	if(command.length() == 1){
-	        		int respond = switch ((command.charAt(0))) {
-					case 'B' -> 1; // B for buy
-					case 'A' -> 2; // A for progress 
-					case 'Q' -> 3; // Q to print the quilt board
-					case 'C' -> 4; // C to print circle patch
-					case 'T' -> 5; // T to print time Board
-					case 'E' -> 6; // E to Exit.
-					default -> 7;
-	        		};
-	        		if(respond != 7) {return respond;};
-	        		System.out.println(error);
-	        	}
-			}
-        }
-	}
+		int respond = 4;
+		commandListAction.stream().forEach(commandLine -> System.out.println(commandLine));
+		do {
+        	String command = scanner.nextLine();
+        	command.toUpperCase(Locale.ROOT);
+        	if(command.length() == 1){
+        		respond = switch ((command.charAt(0))) {
+				case 'B' -> 1; // B for buy
+				case 'A' -> 2; // A for progress 
+				case 'Q' -> 3; // E to Exit.
+				default -> 4;
+        		};
+        	}
+    		if(respond == 4) { System.out.println(error);};
+    	} while(respond == 4);
+		
+		return respond;
+    }
 	
 	/**
 	 * Ask the user which version of the game he wants to play
@@ -63,7 +60,12 @@ public class Interaction {
 	 */
 	//TODO
 	public static int chosePatch()	{
-		return 0;
+		int respond;
+		System.out.println("Enter the number of the patch that you want to buy :");
+		do {//selection par le joueur
+			respond = Integer.parseInt(scanner.nextLine());
+		}while (respond < 0 || respond > 2);		
+		return respond;
 	}
 	
 	/**
@@ -71,32 +73,34 @@ public class Interaction {
 	 * @param coordinate
 	 * @return
 	 */
-	public static String choseCoordinates(int[] coordinate)	{
+	public static char choseCoordinates(int[] coordinate)	{
+		
 		Objects.requireNonNull(coordinate);
-		try ( Scanner scanner = new Scanner( System.in )) {
-			while(true) {
-				System.out.println(commandPatch);
-				String command = scanner.nextLine();
-	        	command.toUpperCase(Locale.ROOT);
-	        	if(command.length() == 1){
-	        		String respond = switch ((command.charAt(0))) {
-					case 'L' -> "L"; 
-					case 'R' -> "R"; 
-					case 'F' -> "F";
-					default -> "Q";
-	        		};
-	        		return respond;
-	        	}
-	        	else if(command.length() == 3) {
-	        		// Warning
-	        		if((Character.toString(command.charAt(0)) != " ") &&
-	        				(Character.toString(command.charAt(2)) != " ")){
-	        			coordinate[0] = Integer.parseInt(Character.toString(command.charAt(0)));
-	        			coordinate[1] = Integer.parseInt(Character.toString(command.charAt(2)));
-	        		}
-	        	}
-			}
-        }
+		char respond = 'E';
+		commandPatch.stream().forEach(commandLine -> System.out.println(commandLine));
+		while(respond == 'E') {
+			String command = scanner.nextLine();
+        	command.toUpperCase(Locale.ROOT);
+        	if(command.length() == 1){
+        		respond = switch ((command.charAt(0))) {
+				case 'L' -> 'L'; 
+				case 'R' -> 'R'; 
+				case 'F' -> 'F';
+				case 'Q' -> 'Q';
+				default -> 'E';
+        		};
+        	}
+        	else if(command.length() == 3) {
+        		if((Character.toString(command.charAt(0)) != " ") &&
+        				(Character.toString(command.charAt(2)) != " ")){
+        			coordinate[0] = Integer.parseInt(Character.toString(command.charAt(0)));
+        			coordinate[1] = Integer.parseInt(Character.toString(command.charAt(2)));
+        			respond ='C';
+        		}
+        	}
+		}
+		return respond;
+    
 	}
 	
 	/**

@@ -61,24 +61,13 @@ public class Patch {
 	 * @param direction
 	 * 				The direction of the rotation, 1 for left rotation otherwise -1 for right rotation. 
 	 */
-	public void rotate(int direction) {
-		if (direction != 1 && direction != -1) { throw new IllegalArgumentException(); }
-		int k = switch (direction) {
-		case -1: {
-			yield dimension.length - 1;
-		}
-		case 1: {
-			yield 0;
-		}
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + direction);
-		};
+	public void rotate(boolean direction) {
         int copy[][] = new int[dimension[0].length][dimension.length];
-        for(int i = 0; i < dimension.length; i++,k+=direction)
+        for(int i = 0, k = (direction ? dimension.length - 1 : 0 ); i < dimension.length; i++, k += (direction ? -1 : 1))
         {
-            for(int j = 0; j < dimension[0].length; j++)
+            for(int j = 0, l = (direction ? 0 : dimension[0].length - 1); j < dimension[0].length; j++, l += (direction ? 1 : -1))
             {
-                copy[j][k] = dimension[i][j];
+                copy[l][k] = dimension[i][j];
             }
         }
         dimension = copy;
@@ -179,4 +168,5 @@ public class Patch {
 		b.append(label.toString());
 		return b.toString();
 	}
+	
 }

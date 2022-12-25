@@ -5,9 +5,12 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import Model.CirclePatch;
+import Model.Coordinate;
+import Model.Label;
 import Model.Patch;
 import Model.Player;
 import Model.Timeboard;
+import View.Interaction;
 import View.ViewCirclePatch;
 
 public class Game {
@@ -18,10 +21,12 @@ public class Game {
 	
 	public Game() {
 		// Initialisaton de tous les objets du model
-		this.timeboard = new Timeboard(new Player("first"), new Player("second"));
+		Player first = new Player("first");
+		Player second = new Player("second");
+		second.changeTurn();
+		this.timeboard = new Timeboard(first, second);
 		this.circlePatch = new CirclePatch();
-		viewCirclePatch = new ViewCirclePatch();
-		sc = new Scanner(System.in);
+		this.viewCirclePatch = new ViewCirclePatch();
 	}
 	
 	/**
@@ -36,8 +41,7 @@ public class Game {
 		// Configuration du jeu à savoir quelle version lancée
 		String file = specialPatch ? "phase2.txt" : "phase1.txt";
 		try {
-			
-			circlePatch.initCirclePatch(file, 2, specialPatch ? 1 : 20); 				
+			circlePatch.initCirclePatch(file, specialPatch ? 33 : 2, specialPatch ? 1 : 20); 				
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -49,8 +53,11 @@ public class Game {
 	 * TODO
 	 */
 	public void runGame() {
-		// Execute une boucle while sur perform turn tant qu'il n'y a pas de condition d'arret
-		// quitter la partie ou partie terminer
+		while(timeboard.NotEndGame()) {
+			if(performTurn() == 1) {
+				return;
+			}
+		}
 	}
 	
 	
@@ -58,74 +65,79 @@ public class Game {
 	/**
 	 * TODO
 	 */
-	public void performTurn() {
-		// 3 options : Achat, Avancer, afficher menu
-		
-		//On recup l'input du joueur et tant palyer.IsTurn == true on continue
-		
-		// Lance le menu 
-		
-			// IF 'B' On lance la fonction Achat
-		
-			// Else if 'A' On lance la fonction Avancer
-		
+	public int performTurn() {
+		System.out.println("#################");
+		Player currentPlayer = timeboard.currentPlayer();
+		Player opponentPlayer = timeboard.oppenentPlayer(currentPlayer);
+		ViewCirclePatch viewCirclePatch = new ViewCirclePatch();
+		int advanceOrTakeRespond;
+		Interaction.cleanConsole();
+		// à remplacer par les fonctions de display.
+		System.out.println(timeboard.toString());
+		viewCirclePatch.displayNextPaches(circlePatch.nextPatches());
+		System.out.println(currentPlayer);
+		// à remplacer par les fonctions de display.
+		advanceOrTakeRespond = Interaction.advanceOrTake();
+		if (advanceOrTakeRespond == 3){
+			return 1;
+		}
+		if(advanceOrTakeRespond == 1) {	// If the player want to buy pacth.
+			if(buy(currentPlayer) == 1) {return 1;};
+		}
+		else if(advanceOrTakeRespond == 2) { // If the player want to buy advance.
+			timeboard.advancePlayer(currentPlayer, timeboard.oppenentPlayer(currentPlayer));
+		}
+		return 0;
 	}
 	
 	
 	/**
 	 * Perform every operation to buy an item
 	 */
-	public void buy() {
-		// possiblité d'afficher le menu
-		// possibilité de quitter la fonciton
-		// ne pas oublier de changer le tour du joueur une fois la fonction terminée	
-		int rep;
+	public int buy(Player currentPlayer) {
 		Patch currPatch;
-		
-		//listing des patchs achetables
+		int[] coordinate = new int[2];
+		int respondChosePatch;	// The chosen patch.
+		char respondAction;		// The chosen action (Flip, rotate, coordinate).
 		viewCirclePatch.displayNextPaches(circlePatch.nextPatches());
-	
-		do {//selection par le joueur
-			rep = Integer.parseInt(sc.nextLine());
-		}while (rep < 0 || rep > 3); 
 		
-		currPatch = circlePatch.nextPatches().get(rep);
-		
-		//checking if the player have money
-		if (timeboard.currentPlayer().checkMoney(currPatch.price())) {
-			
-			// on renvoie l'indice, on bouge le token et on supp le patch de la liste
-			
-		
-			// ce patch est sauvegardé et on le donne au joueur pour qu'il réalise 2 opérations
-		
-				// placer le patch ATTENTION BIG TROUBLE
-		
-				// payer le patch			
-			
-			// Once token place we move the neutral token
-			circlePatch.swapPatch(rep);
-			
-			// We substract money from player's bank of buttons
-			timeboard.currentPlayer().buyPatches(currPatch);
+		respondChosePatch = Interaction.chosePatch(); 
+		currPatch = circlePatch.nextPatches().get(respondChosePatch);
+		if (currentPlayer.checkMoney(currPatch.price())) {	//checking if the player have money
+			currentPlayer.patchChose(currPatch);
+			do {
+				System.out.println(currentPlayer.quiltboard());
+				System.out.println(currentPlayer.patch());
+				respondAction = Interaction.choseCoordinates(coordinate);
+				if(respondAction == 'L' || respondAction == 'R') {
+					System.out.println("ROTATE !");
+					currentPlayer.patch().rotate((respondAction == 'R'));
+				}
+				else if(respondAction == 'F') {
+					currentPlayer.patch().flip();
+				}
+				else if(respondAction == 'Q') {
+					return 1;
+				}
+				System.out.println(currentPlayer.quiltboard());
+				if(respondAction == 'C'){
+					if(currentPlayer.checkPutPatch(coordinate[0], coordinate[1])) {
+						break;
+					}
+				}
+			}while(true);
+			currentPlayer.placePatchs(coordinate[0], coordinate[1]);
+			currentPlayer.buyPatches(currPatch);
+			timeboard.checkCurrentPostionPlayer(currentPlayer,currentPlayer.currentPosition(),
+					currentPlayer.currentPosition() + currPatch.movement());
+			currentPlayer.movePawn(currPatch.movement());
+			timeboard.checkWhoIsTurn();	// check who is next and change the value of player turn.
+			circlePatch.swapPatch(respondChosePatch);
 		}
 		else {
 			System.out.println("Vous n'avez pas assez d'argent");
 		}
-	}
-	
-	/**
-	 * TODO
-	 */
-	public void moveForward(Player currentPlayer) {
-		timeboard.advancePlayer(currentPlayer, timeboard.oppenentPlayer(currentPlayer));
-	}
-	
-	/**
-	 * TODO
-	 */
-	public void menu() {
-		
+		return 0;
 	}
 	
 	/**
@@ -137,5 +149,30 @@ public class Game {
 	
 	public Timeboard timeboard() {
 		return timeboard;
+	}
+	
+	public static void main(String[] args) {
+		
+		Game game = new Game();
+		game.init(true);
+		game.runGame();
+		/*
+		int i = 3, j = 3;
+		int tab[][] = {{0, 1}, {1, 1}};
+		Label l = new Label(0, 3, 2);
+		Patch p = new Patch(l, tab);
+		Player first = new Player("first");
+		first.patchChose(p);
+		first.placePatchs(i, j);
+		System.out.println(first.quiltboard());
+		int tab2[][] = {{0, 1}, {1, 1}};
+		Label l2 = new Label(0, 3, 2);
+		Patch p2 = new Patch(l2, tab2);
+		first.patchChose(p2);
+		if(first.checkPutPatch(i, j)) {
+			first.placePatchs(2, 3);
+		}
+		System.out.println(first.quiltboard());
+		*/
 	}
 }

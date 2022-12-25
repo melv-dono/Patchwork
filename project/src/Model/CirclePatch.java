@@ -190,14 +190,14 @@ public class CirclePatch {
 	
 	/*JUSTE POUR QUELQUES TESTS À ÉFFACER*/
 	public static void main(String[] args) {
-		/*var c = new CirclePatch();
+		var c = new CirclePatch();
 		
 		try {
 			c.initCirclePatch("phase2.txt", 33, 1);				
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
-		}*/
+		}
 		System.out.println("Work in progress...");
 		
 	}
@@ -255,17 +255,13 @@ public class CirclePatch {
 	
 	@Override
 	public String toString() {
+		int index; 
 		var string = new StringBuilder();
 		// Print the patch of the right side of the table.
-		for(int patch = pawn.currentPosition(); patch < circlePatch.size(); patch++)
+		for(int i = pawn.currentPosition(); i < 3; i++)
 		{
-			string.append(circlePatch.get(patch).toString());
-			string.append("\n");
-		}
-		// Print the patch of the left side of the table.
-		for(int patch = 0; patch < pawn.currentPosition(); patch++)
-		{
-			string.append(circlePatch.get(patch).toString());
+			index = pawn.currentPosition() + i % circlePatch.size();
+			string.append(circlePatch.get(index).toString());
 			string.append("\n");
 		}
 		return string.toString();

@@ -1,0 +1,4 @@
+1) réecriture sur le quiltboard vérification obselète.
+2) Flip, rotate à revoir car on reste pas dan sla boucle.
+3) Affichage à revoir fin de game.
+4) Number of buton increase when player advence.
