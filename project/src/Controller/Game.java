@@ -12,11 +12,12 @@ import Model.Player;
 import Model.Timeboard;
 import View.Interaction;
 import View.ViewCirclePatch;
+import View.ViewQuiltboard;
+import View.ViewTimeboard;
 
 public class Game {
 	private Timeboard timeboard;
 	private CirclePatch circlePatch;
-	private ViewCirclePatch viewCirclePatch;
 	private Scanner sc;
 	
 	public Game() {
@@ -26,7 +27,6 @@ public class Game {
 		second.changeTurn();
 		this.timeboard = new Timeboard(first, second);
 		this.circlePatch = new CirclePatch();
-		this.viewCirclePatch = new ViewCirclePatch();
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class Game {
 		timeboard.initMagicCases(specialPatch);
 		
 		// Configuration du jeu à savoir quelle version lancée
-		String file = specialPatch ? "phase2.txt" : "phase1.txt";
+		String file = specialPatch ? "src/data/phase2.txt" : "src/data/phase1.txt";
 		try {
 			circlePatch.initCirclePatch(file, specialPatch ? 33 : 2, specialPatch ? 1 : 20); 				
 		}
@@ -66,25 +66,25 @@ public class Game {
 	 * TODO
 	 */
 	public int performTurn() {
-		System.out.println("#################");
+		System.out.println("#######################################");
 		Player currentPlayer = timeboard.currentPlayer();
 		Player opponentPlayer = timeboard.oppenentPlayer(currentPlayer);
 		ViewCirclePatch viewCirclePatch = new ViewCirclePatch();
 		int advanceOrTakeRespond;
 		Interaction.cleanConsole();
-		// à remplacer par les fonctions de display.
-		System.out.println(timeboard.toString());
-		viewCirclePatch.displayNextPaches(circlePatch.nextPatches());
+		ViewTimeboard.display(timeboard);
+		ViewCirclePatch.displayNextPaches(circlePatch.nextPatches());
 		System.out.println(currentPlayer);
 		// à remplacer par les fonctions de display.
 		advanceOrTakeRespond = Interaction.advanceOrTake();
+		// do a switch
 		if (advanceOrTakeRespond == 3){
 			return 1;
 		}
-		if(advanceOrTakeRespond == 1) {	// If the player want to buy pacth.
+		else if(advanceOrTakeRespond == 1) {	// If the player want to buy pacth.
 			if(buy(currentPlayer) == 1) {return 1;};
 		}
-		else if(advanceOrTakeRespond == 2) { // If the player want to buy advance.
+		else if(advanceOrTakeRespond == 2) { // If the player want to advance.
 			timeboard.advancePlayer(currentPlayer, timeboard.oppenentPlayer(currentPlayer));
 		}
 		return 0;
@@ -99,14 +99,15 @@ public class Game {
 		int[] coordinate = new int[2];
 		int respondChosePatch;	// The chosen patch.
 		char respondAction;		// The chosen action (Flip, rotate, coordinate).
-		viewCirclePatch.displayNextPaches(circlePatch.nextPatches());
+		ViewCirclePatch.displayNextPaches(circlePatch.nextPatches());
 		
 		respondChosePatch = Interaction.chosePatch(); 
 		currPatch = circlePatch.nextPatches().get(respondChosePatch);
 		if (currentPlayer.checkMoney(currPatch.price())) {	//checking if the player have money
 			currentPlayer.patchChose(currPatch);
 			do {
-				System.out.println(currentPlayer.quiltboard());
+//				System.out.println(currentPlayer.quiltboard());
+				ViewQuiltboard.display(currentPlayer.quiltboard());
 				System.out.println(currentPlayer.patch());
 				respondAction = Interaction.choseCoordinates(coordinate);
 				if(respondAction == 'L' || respondAction == 'R') {
@@ -119,7 +120,8 @@ public class Game {
 				else if(respondAction == 'Q') {
 					return 1;
 				}
-				System.out.println(currentPlayer.quiltboard());
+//				System.out.println(currentPlayer.quiltboard());
+				ViewQuiltboard.display(currentPlayer.quiltboard());
 				if(respondAction == 'C'){
 					if(currentPlayer.checkPutPatch(coordinate[0], coordinate[1])) {
 						break;

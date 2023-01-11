@@ -64,9 +64,47 @@ public class Interaction {
 		System.out.println("Enter the number of the patch that you want to buy :");
 		do {//selection par le joueur
 			respond = Integer.parseInt(scanner.nextLine());
-		}while (respond < 0 || respond > 2);		
-		return respond;
+		}while (respond < 1 || respond > 3);		
+		return (respond - 1);
 	}
+	//AJOUT SUREMENT À REFACTOR DANS UNE AUTRE CLASSE
+	private static int charToInt(char c) {
+		int i;
+		try {
+			i = Integer.parseInt(Character.toString(c));
+			return i;
+		}
+		catch (NumberFormatException nfe) {
+			System.err.println("Please enter a valid number.");
+			return -1;
+		}
+	}
+	// REFACTOR surement que la partie de conversion
+	
+	private static int fillArray(int[] coordinate, char a, char b) {
+		int row = charToInt(a);
+		int column = charToInt(b);
+		
+		if (row == -1 || column == -1) {
+			return -1;
+		}
+		else {
+			coordinate[0] = row;
+			coordinate[1] = column;
+			return 1;	
+		}
+	}	
+	
+	private static char patchCommand(char c) {
+		return switch (c) {
+			case 'L' -> 'L'; 
+			case 'R' -> 'R'; 
+			case 'F' -> 'F';
+			case 'Q' -> 'Q';
+			default -> 'E';
+		};
+	}
+	//FIN AJOUT
 	
 	/**
 	 * 
@@ -74,33 +112,30 @@ public class Interaction {
 	 * @return
 	 */
 	public static char choseCoordinates(int[] coordinate)	{
+		char respond = 'E';
+		String command;
 		
 		Objects.requireNonNull(coordinate);
-		char respond = 'E';
+
 		commandPatch.stream().forEach(commandLine -> System.out.println(commandLine));
 		while(respond == 'E') {
-			String command = scanner.nextLine();
-        	command.toUpperCase(Locale.ROOT);
-        	if(command.length() == 1){
-        		respond = switch ((command.charAt(0))) {
-				case 'L' -> 'L'; 
-				case 'R' -> 'R'; 
-				case 'F' -> 'F';
-				case 'Q' -> 'Q';
-				default -> 'E';
-        		};
-        	}
-        	else if(command.length() == 3) {
-        		if((Character.toString(command.charAt(0)) != " ") &&
-        				(Character.toString(command.charAt(2)) != " ")){
-        			coordinate[0] = Integer.parseInt(Character.toString(command.charAt(0)));
-        			coordinate[1] = Integer.parseInt(Character.toString(command.charAt(2)));
-        			respond ='C';
-        		}
+			command = scanner.nextLine();
+			command = command.toUpperCase(Locale.ROOT);
+        	switch(command.length()) {
+        		case 1:
+        			respond = patchCommand(command.charAt(0));
+        			break;
+        		case 3:
+        			if((command.charAt(0) != ' ') && (command.charAt(2) != ' ')){
+        				respond = (fillArray(coordinate, command.charAt(0), command.charAt(2)) == 1) ? 'C': 'E';
+        			}
+        			break;
+        		default:
+        			System.out.println(error);
+        			break;
         	}
 		}
-		return respond;
-    
+		return respond;    
 	}
 	
 	/**

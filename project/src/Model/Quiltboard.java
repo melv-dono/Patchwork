@@ -107,6 +107,19 @@ public class Quiltboard {
 		}
 		return result;
 	}
+	//AJOUT MELVYN
+	public int cols() {
+		return cols;
+	}
+	
+	public int rows() {
+		return rows;
+	}
+	
+	public int[][] dimension() {
+		return dimension;
+	}
+	//FIN AJOUT
 	
 	@Override
 	public String toString()

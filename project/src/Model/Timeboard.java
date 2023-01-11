@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import View.Interaction;
@@ -43,6 +44,21 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 			cases.put(idCase,caseValue);
 		}
 	}
+	
+	//AJOUT
+	public Player first() {
+		return firstPlayer;
+	}
+	
+	public Player second() {
+		return secondPlayer;
+	}
+	
+	public Map<Integer, Case> cases() {
+		return cases;
+	}
+	
+	//FIN AJOUT
 	
 	@Override
 	public String toString() {
