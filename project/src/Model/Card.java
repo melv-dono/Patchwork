@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * <b>Card represents a cardin the game</b>
+ * <b>Card represents a card in the game</b>
  * <p>
- * A card is characterized by :
+ * A Card is characterized by :
  * <ul>
  * <li>button : the number of virtual buttons.</li>
  * <li>income : the number of buttons earns when the token cross a special case (button income)</li>
@@ -174,7 +174,7 @@ public record Card(int button, int income, List<Integer> filters) {
 	 * @return 
 	 * 		value representing the area of the current patch
 	 */
-	public List<Optional<Patch>> applyFilter(int filtNbr, List<Patch> patches, int pos) {
+	private List<Optional<Patch>> applyFilter(int filtNbr, List<Patch> patches, int pos) {
 		Objects.requireNonNull(patches);
 		checkFilterNumber(filtNbr);
 		
@@ -185,5 +185,38 @@ public record Card(int button, int income, List<Integer> filters) {
 			case 4 -> conv(farest(patches));
 			default -> throw new IllegalArgumentException();
 		};
+	}
+	
+	private void checkPos(int pos) {
+		if (pos < 0) {
+			throw new IllegalArgumentException();
+		}
+	}
+	
+	/**
+	 * Determined which patch need to be selected after using
+	 * all the filtering rules in a ascending order
+	 * @param pos
+	 * 			position of th e player
+	 * @param patches
+	 * 			a list of patches	
+	 * @param filtNbr
+	 * 			the number rule you want to apply
+	 * @return 
+	 * 		patch selected
+	 */
+	public Patch determinPatch(List<Patch> patches, int pos) {
+		Objects.requireNonNull(patches);
+		checkPos(pos);
+		List<Optional<Patch>> patchSelected;
+		int i = 1;
+		
+		do {
+			patchSelected = applyFilter(i, patches, pos);
+			i++;
+		}		
+		while (patchSelected.size() > 1 || patchSelected.get(0).isEmpty());
+		
+		return patchSelected.get(0).get();
 	}
 }
