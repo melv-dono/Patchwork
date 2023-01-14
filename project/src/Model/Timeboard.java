@@ -173,6 +173,14 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 			return firstPlayer;
 		}
 	}
+	
+	public Player firstPlayer() {
+		return firstPlayer;
+	}
+	
+	public Player secondPlayer() {
+		return secondPlayer;
+	}
 	/**
 	 * Advances the player pawn and overtakes the oppenent.
 	 * 

@@ -86,6 +86,7 @@ public class Quiltboard {
 		if (i < 0 || j < 0) { throw new IllegalArgumentException(); }
 		List<Coordinate> pos = patch.realLocation();
 		patchKey++;
+		System.out.println(patchKey);
 		for (int k = 0; k < pos.size(); k++) {
 			dimension[i + pos.get(k).x()][j + pos.get(k).y()] = patchKey;
 		}

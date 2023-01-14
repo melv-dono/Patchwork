@@ -75,7 +75,7 @@ public class CirclePatch {
 	 * 
 	 * @param sizeFolder
 	 * 				refers to the number of patch inside the file 
-	 * 
+	 * 	
 	 */
 	
 	public void initCirclePatch(String folder, int sizeFolder, int iteration) throws IOException {
@@ -188,18 +188,8 @@ public class CirclePatch {
 		return tab;		
 	}
 	
-	/*JUSTE POUR QUELQUES TESTS À ÉFFACER*/
-	public static void main(String[] args) {
-		var c = new CirclePatch();
-		
-		try {
-			c.initCirclePatch("phase2.txt", 33, 1);				
-		}
-		catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-		System.out.println("Work in progress...");
-		
+	public int posPawn() {
+		return pawn.currentPosition();
 	}
 		
 	/**

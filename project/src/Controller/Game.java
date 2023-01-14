@@ -39,7 +39,7 @@ public class Game {
 		timeboard.initMagicCases(specialPatch);
 		
 		// Configuration du jeu à savoir quelle version lancée
-		String file = specialPatch ? "src/data/phase2.txt" : "src/data/phase1.txt";
+		String file = specialPatch ? "phase2.txt" : "phase1.txt";
 		try {
 			circlePatch.initCirclePatch(file, specialPatch ? 33 : 2, specialPatch ? 1 : 20); 				
 		}
@@ -120,7 +120,6 @@ public class Game {
 				else if(respondAction == 'Q') {
 					return 1;
 				}
-//				System.out.println(currentPlayer.quiltboard());
 				ViewQuiltboard.display(currentPlayer.quiltboard());
 				if(respondAction == 'C'){
 					if(currentPlayer.checkPutPatch(coordinate[0], coordinate[1])) {

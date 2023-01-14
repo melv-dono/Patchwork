@@ -258,6 +258,13 @@ public class Player {
 		return patch;
 	}
 	
+	public int buttons() {
+		return buttons;
+	}
+	
+	public boolean specialTile() {
+		return specialTile;
+	}
 	/**
 	 * Check if the coordinate chose by the player is valid
 	 * on the quiltBoard.

@@ -74,10 +74,11 @@ public class Patch {
 	}
 	
 	/**
-	 * Change the {@link Patch#dimension} array to another array
-	 * in which the flip is performed.
-	 *  
-	 */
+     * Flips the dimension array of the Patch object.
+     * The flip is performed by creating a copy of the original array
+     * and swapping the elements to reflect the flip.
+     * The original dimension array is then replaced with the flipped copy.
+     */
 	public void flip()	{
 		int copy[][] = new int[dimension.length][dimension[0].length];
         for(int i = 0; i < dimension.length; i++)
