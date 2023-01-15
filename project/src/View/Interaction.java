@@ -1,5 +1,7 @@
 package View;
 
+import java.awt.Color;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,7 +10,9 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import Controller.Game;
+import Model.CirclePatch;
 import Model.Coordinate;
+import fr.umlv.zen5.ApplicationContext;
 
 public class Interaction {
 	private static final String commandBuy = "BUY PATCH : press 'B' and ENTER";
@@ -17,8 +21,8 @@ public class Interaction {
 	private static final String commandQuiltBoard = "SHOW QUILTBOARD : press 'Q' and ENTER";
 	private static final String commandCirclePatch = "SHOW CIRCLE PACTH : press 'C' and ENTER";
 	private static final String commandTimeboard = "SHOW TIME BOARD : press 'T' and ENTER";
-	private static final String commandRotateR = "RIGHT ROTATE PATH : press 'R' and ENTER";
-	private static final String commandRotateL = "LEFT ROTATE PATH : press 'L' and ENTER";
+	private static final String commandRotateR = "RIGHT ROTATE PATCH : press 'R' and ENTER";
+	private static final String commandRotateL = "LEFT ROTATE PATCH : press 'L' and ENTER";
 	private static final String commandFlip = "FLIP THE PATCH : press 'F' and ENTER";
 	private static final String commandCoor = "CHOSE COORDINATE : i j and ENTER (ex : 0 1)";
 	private static final String error = "Error : to make a choice you must enter one of the commands bellow";
@@ -26,6 +30,9 @@ public class Interaction {
 	private static final List<String> commandListAction = Arrays.asList(commandBuy, commandAdvences, commandQuit);
 
 	private static final Scanner scanner = new Scanner(System.in);
+	
+	
+	
 	public static int advanceOrTake(){
 		int respond = 4;
 		commandListAction.stream().forEach(commandLine -> System.out.println(commandLine));

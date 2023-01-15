@@ -1,10 +1,15 @@
 package Model;
 
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import View.Graphique;
 import View.Interaction;
+import fr.umlv.zen5.ApplicationContext;
+import fr.umlv.zen5.Event;
+import fr.umlv.zen5.Event.Action;
 
 
 public class Timeboard { // Maybe change with a record see what is the problem later
@@ -94,6 +99,57 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 		
 	}
 	
+	public void checkCurrentPostionPlayer(Player currentPlayer, int start, int end, ApplicationContext context , int X, int Y, int sizeCase) {
+        Graphique graph = new Graphique(sizeCase, 30);
+		for(int caseKey = start; caseKey <= end; caseKey++) {
+			if(cases.get(caseKey) == Case.BUTTON) {
+				currentPlayer.earnButtonQuiltboard();	//earn the button on the quiltboard
+			}
+			else if(cases.get(caseKey) == Case.SPECICAL_PATCH) {
+	      	    graph.displaySpecialPatch(context, X, Y);
+	      	    int tab[][] = {{1}};
+	      	    Label l = new Label(0, 0, 0);
+	      	    Patch p = new Patch(l, tab);
+	      	    Patch currPatch = p;
+    			currentPlayer.patchChose(currPatch);
+	      	    int i = 0, j = 0;
+	      	    for(;;) {
+	      	    	Event event = context.pollEvent();
+	    	        if (event == null) {  // no event	
+	    	          continue;
+	    	        }
+	    	        Action action = event.getAction();
+	    	        Point2D.Float location = event.getLocation();
+	    	        if(action == Action.POINTER_DOWN) {              
+	    	        	int x_s, y_s, x_e, y_e;
+	    	        	if(currentPlayer.name() == "first") {
+	    	        		 x_s = sizeCase * 3;
+	    	        		 y_s = sizeCase * 3;
+	    	        		 x_e = sizeCase * 12;
+	    	        		 y_e = sizeCase * 12;
+	    	        	}
+    	        		else {
+    	        			 x_s = sizeCase * (3 + 18);
+    	        			 y_s = sizeCase * 3;
+	    	        		 x_e = sizeCase * (3 + 18 + 9);
+	    	        		 y_e = sizeCase * 12;
+    	        		}
+    	        		if(location.x >= x_s && location.x <= x_e &&
+	        				location.y >= y_s && location.y <= y_e) {
+    	        			j = (int) ((location.x - x_s) / sizeCase);
+    	        			i = (int) ((location.y - y_s) / sizeCase);
+    						if(currentPlayer.checkPutPatch(i, j)) {
+	    							break;
+    						}	
+	    	        		
+	    	        	}
+	      	    }
+				currentPlayer.placePatchs(i, j);
+				cases.replace(caseKey, Case.NEUTRAL); // Remove the special patch.
+			}
+		}
+		}
+	}
 	
 	/*TODO : check if a player is on a magic case*/
 	public void checkCurrentPostionPlayer(Player currentPlayer, int start, int end) {
@@ -182,6 +238,26 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 		return secondPlayer;
 	}
 	/**
+	 * Advances the player pawn and overtakes the oppenent.
+	 * 
+	 * @param
+	 * 		currentPlayer The player who advence.
+	 * @param
+	 * 		opponentPlayer The opponent player oftThe player who advence.
+	 */
+	public void advancePlayer(Player currentPlayer, Player opponentPlayer, ApplicationContext context, int sizeCase) 	{
+		//checkCurrentPostionPlayer(ApplicationContext context , Player currentPlayer, int start, int end, int X, int Y, int sizeCase);
+		Objects.requireNonNull(currentPlayer);
+		Objects.requireNonNull(opponentPlayer);
+		int start = currentPlayer.currentPosition();
+		int end = opponentPlayer.currentPosition() + 1;
+		checkCurrentPostionPlayer(currentPlayer, start, end, context, sizeCase * 13, sizeCase * 12, sizeCase);	
+		currentPlayer.movePawn(end - start);
+		currentPlayer.earnButton(end - start);
+		checkWhoIsTurn();	// check who is next and change the value of player turn.
+	}
+	
+	/**(
 	 * Advances the player pawn and overtakes the oppenent.
 	 * 
 	 * @param
