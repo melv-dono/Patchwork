@@ -72,6 +72,8 @@ public class Player {
 	 */
 	private Patch patch;
 	
+	private boolean modeGlouton;
+	
 	/**
      * Constructor player.
      * When constructing a "player" object, the turn is 0,
@@ -94,6 +96,7 @@ public class Player {
 		this.turn = false;
 		this.specialTile = false;
 		this.patch = null;
+		this.modeGlouton = false;
 	}
 	
 	/**
@@ -116,6 +119,10 @@ public class Player {
 		turn = (turn == true) ? false : true;
 	}
 	
+	public void activeModeGlouton() {
+		modeGlouton = true;
+	}
+	
 	/**
 	 * Count the total score of the player
 	 * 
@@ -123,24 +130,7 @@ public class Player {
 	 * @see Player#scoreButton()
 	 */
 	public int totalScore() {		
-		return buttons + quiltboard.countScore();
-	}
-	
-	/**
-	 * Check is the player have enough money (buttons)
-	 * 
-	 * @param price
-	 * 		number of buttons that cost a patch
-	 * 
-	 * @see Game#buy()
-	 * 
-	 * @return
-	 * 		true when the player have enough buttons
-	 * 		false otherwise
-	 */
-	public boolean checkMoney(int price) {
-		if (price < 0) { throw new IllegalArgumentException(); }
-		return (buttons - price >= 0) ? true : false; 
+		return buttons + quiltboard.countScore() + ((specialTile) ? 7 : 0) ;
 	}
 	
 	/**
@@ -160,6 +150,58 @@ public class Player {
 	}
 	
 	/**
+	 * Adds buttons to player button
+	 * 
+	 * @param buttonWin
+	 * 		number of buttons that the player earned
+	 * 
+	 * @see Player#buttons
+	 */
+	public void earnButton(int buttonWin) {
+		if (buttonWin < 0) { 
+			throw new IllegalArgumentException(); 
+		}
+		/*Add player ears buttons coming 
+		 * from those present on his quiltboard.*/
+		else if (buttonWin == 0) { 
+			buttons += quiltboard.countScore();
+		}
+		else {
+			buttons += buttonWin;
+		}
+	}
+	
+	/**
+	 * Change special to true because the player have 7x7 cases on the quiltboard.
+	 * 
+	 * @see Player#specialTile
+	 */
+	public boolean checkSpecialTile() {
+		if (quiltboard.haveSpeicialeTile()) {
+			specialTile = true;
+			return specialTile;	
+		}
+		else {
+			return specialTile;
+		}
+	}
+	
+	private void gloutonPlacement() {
+        for (int i = 0; i < quiltboard.cols(); i++) {
+            for (int j = 0; j < quiltboard.cols(); j++) {
+                if (quiltboard.dimension()[i][j] == 0) {
+                    quiltboard.putPatch(patch, i, j);
+                 
+                }
+            }
+        }
+    }
+	
+	public boolean modeGlouton() {
+		return modeGlouton;
+	}
+	
+	/**
 	 * Place patch on the QuiltBoard.
 	 * 
 	 * @param 
@@ -169,36 +211,12 @@ public class Player {
 	 * 			The value is 1 if the pose is not valid othewise 0.
 	 */
 	public void placePatchs(int i, int j) {
-		 quiltboard.putPatch(patch, i, j);
-	}
-	
-	/**
-	 * Adds buttons to player button
-	 * 
-	 * @param buttonWin
-	 * 		number of buttons that the player earned
-	 * 
-	 * @see Player#buttons
-	 */
-	public void earnButton(int buttonWin) {
-		if (buttonWin < 0) { throw new IllegalArgumentException(); }
-		buttons += buttonWin;
-	}
-	
-	/**
-	 * Add player ears buttons coming from those present on his quiltboard. 
-	 */
-	public void earnButtonQuiltboard() {
-		buttons += quiltboard.countScore();
-	}
-	
-	/**
-	 * Change special to true because the player have 7x7 cases on the quiltboard.
-	 * 
-	 * @see Player#specialTile
-	 */
-	public void getSpecialTile() {
-		specialTile = true;
+		if (modeGlouton) {
+			gloutonPlacement();
+		}
+		else {
+			quiltboard.putPatch(patch(), i, j);	
+		}
 	}
 	
 	/**
@@ -214,7 +232,6 @@ public class Player {
 	public Quiltboard quiltboard() {
 		return quiltboard;
 	}
-
 	
 	/**
 	 * Gives the currentPositioin of the player's pawn
@@ -258,6 +275,14 @@ public class Player {
 		return patch;
 	}
 	
+	public int button() {
+		return buttons;
+	}
+	
+	public boolean realPlayer() {
+		return true;
+	}
+	
 	/**
 	 * Check if the coordinate chose by the player is valid
 	 * on the quiltBoard.
@@ -268,6 +293,23 @@ public class Player {
 	public boolean checkPutPatch(int i, int j) {
 		Optional<List<Coordinate>> op = quiltboard.checkPatchLocation(patch, i, j);
 		return op.isPresent();
+	}
+
+	/**
+	 * Check is the player have enough money (buttons)
+	 * 
+	 * @param price
+	 * 		number of buttons that cost a patch
+	 * 
+	 * @see Game#buy()
+	 * 
+	 * @return
+	 * 		true when the player have enough buttons
+	 * 		false otherwise
+	 */
+	public boolean checkMoney(int price) {
+		if (price < 0) { throw new IllegalArgumentException(); }
+		return (button() - price >= 0) ? true : false; 
 	}
 	
 	@Override

@@ -26,11 +26,67 @@ public class Interaction {
 	private static final List<String> commandListAction = Arrays.asList(commandBuy, commandAdvences, commandQuit);
 
 	private static final Scanner scanner = new Scanner(System.in);
+	
+	private static boolean checkVersion(int version) {
+		if (version == 1 || version == 2 || version == 3) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+
+	public static int initGame() {
+		System.out.println("Welcome in Patchwork ! \nWhich version of the game do want to play: \n1 : simple (terminal) \n2 : complet (terminal) \n3 : graphic (non on terminal)");
+		String command;
+		int choice = 0;
+		do {
+			try {
+				command = scanner.nextLine();
+				choice = Integer.parseInt(Character.toString(command.charAt(0)));
+			}
+			catch(NumberFormatException e) {
+				System.err.println("Please enter a valid entry");
+				choice = 0;
+			}
+		}while (!checkVersion(choice));
+		
+		return choice;		
+	}
+	
+	private static boolean checkChoice(int answer) {
+		if (answer == 1 || answer == 2) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public static int checkModeGlouton() {
+		System.out.println("For this version you can choose to active the gluton mode. \n It will automaticly place your patch for both of you. \nDo you want to use it:\n1 : yes\n2 : no");
+		int choice = 0;
+		String command;
+		do {
+			try {
+				command = scanner.nextLine();
+				choice = Integer.parseInt(Character.toString(command.charAt(0)));
+			}
+			catch(NumberFormatException e) {
+				System.err.println("Please enter a valid entry");
+				choice = 0;
+			}
+		}while(!checkChoice(choice));
+		return choice;
+	}
+	
 	public static int advanceOrTake(){
+		String command;
 		int respond = 4;
 		commandListAction.stream().forEach(commandLine -> System.out.println(commandLine));
 		do {
-        	String command = scanner.nextLine();
+        	command = scanner.nextLine();
         	command.toUpperCase(Locale.ROOT);
         	if(command.length() == 1){
         		respond = switch ((command.charAt(0))) {

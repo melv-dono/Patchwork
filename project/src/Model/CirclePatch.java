@@ -48,7 +48,7 @@ public class CirclePatch {
 	 * To the index of the patch with the lowest area
 	 * This function works only if circlePatch is already initialize
 	 */
-	public void initNeutralToken() {
+	private void initNeutralToken() {
 		Optional<Patch> tiniest = null;
 		OptionalInt op = circlePatch
 				.stream()
@@ -96,6 +96,7 @@ public class CirclePatch {
 			}
 		}
 		Collections.shuffle(circlePatch);
+		initNeutralToken();
 	}
 	
 	/**
@@ -236,11 +237,14 @@ public class CirclePatch {
 	 * Move the pawn on the chosen patch and remove it.
 	 */
 	public void swapPatch(int index) {
+		System.out.println("swap :" + index);
+		
 		if (index < 0 || index > circlePatch.size()) { 
 			throw new IllegalArgumentException();
 		}
+		circlePatch.remove(pawn.currentPosition() + index);
 		pawn.movePawn(index);
-		circlePatch.remove(index);
+
 	}
 	
 	/**

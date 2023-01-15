@@ -6,4 +6,5 @@
  *
  */
 module Patchwork {
+	requires zen5;
 }

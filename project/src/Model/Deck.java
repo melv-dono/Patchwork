@@ -23,15 +23,15 @@ import java.util.List;
  */
 public class Deck {
 	
-	private int version;
+	private final int version;
 	
-	private List<Card> cards;
+	private final List<Card> cards;
 	
-	private List<Card> graveyard;
+	private final List<Card> graveyard;
 	
-	private static int NBR_CARD = 12;
+	private final static int NBR_CARD = 12;
 	
-	private static String PATH = "src/data/card.txt";
+	private final static String PATH = "src/data/card.txt";
 	
 	public Deck(int version) {
 		if (version != 1 && version != 2) {

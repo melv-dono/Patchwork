@@ -44,6 +44,30 @@ public class Quiltboard {
 		patchKey = 0;
 	}
 	
+	public boolean haveSpeicialeTile() {
+		boolean square;
+        for (int x = 0; x < cols - 6; x++) {
+            for (int y = 0; y < cols - 6; y++) {
+                square = true;
+                for (int a = x; a < x + 7; a++) {
+                    for (int b = y; b < y + 7; b++) {
+                        if (dimension[a][b] == 0) {
+                            square = false;
+                            break;
+                        }
+                    }
+                    if (!square) {
+                        break;
+                    }
+                }
+                if (square) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+	
 	/**
 	 * Check if every cell of the current patch can be put in the quiltboard
 	 * At a specific location

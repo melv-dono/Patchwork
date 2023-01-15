@@ -1,7 +1,9 @@
 package Controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Scanner;
 
 import Model.CirclePatch;
@@ -10,6 +12,7 @@ import Model.Label;
 import Model.Patch;
 import Model.Player;
 import Model.Timeboard;
+import Model.Player;
 import View.Interaction;
 import View.ViewCirclePatch;
 import View.ViewQuiltboard;
@@ -19,14 +22,29 @@ public class Game {
 	private Timeboard timeboard;
 	private CirclePatch circlePatch;
 	private Scanner sc;
+	private Player[] players;
 	
 	public Game() {
 		// Initialisaton de tous les objets du model
-		Player first = new Player("first");
-		Player second = new Player("second");
-		second.changeTurn();
-		this.timeboard = new Timeboard(first, second);
+		players = new Player[2];
+		players[0] = new Player("first");
+		players[1] = new Player("second");
+		players[0].changeTurn();
+		this.timeboard = new Timeboard(players[0], players[1]);
 		this.circlePatch = new CirclePatch();
+	}
+	
+	private void updatePlayers() {
+		players[0] = timeboard.currentPlayer();
+		players[1] = timeboard.oppenentPlayer(timeboard.currentPlayer());
+	}
+	
+	private void checkModeGluton() {
+		int answer = Interaction.checkModeGlouton();
+		if (answer == 1) {
+			players[0].activeModeGlouton();
+			players[1].activeModeGlouton();
+		}
 	}
 	
 	/**
@@ -34,67 +52,113 @@ public class Game {
 	 * 
 	 * @param specialPatch
 	 */
-	public void init(boolean specialPatch) {
-		Objects.requireNonNull(specialPatch);
-		timeboard.initMagicCases(specialPatch);
+	public void init() {
+		int version = Interaction.initGame();
+		timeboard.initMagicCases((version == 1) ? false : true);
+		if (version == 1) {
+			checkModeGluton();
+		}
 		
 		// Configuration du jeu à savoir quelle version lancée
-		String file = specialPatch ? "src/data/phase2.txt" : "src/data/phase1.txt";
+		String file = (version == 1) ? "src/data/phase1.txt" : "src/data/phase2.txt";
 		try {
-			circlePatch.initCirclePatch(file, specialPatch ? 33 : 2, specialPatch ? 1 : 20); 				
+			circlePatch.initCirclePatch(file, (version == 1) ? 2 : 33, (version == 1) ? 20 : 1); 				
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
 		}		
-		circlePatch.initNeutralToken(); // mettre cette fonctigon dans l'initialisation générale de circlePatch
+	}
+	
+	private Optional<Player> whoWins(Player p1, Player p2) {
+		if (p1.totalScore() > p2.totalScore()) {
+			return Optional.of(p1);
+		}
+		else if (p1.totalScore() == p2.totalScore()) {
+			return Optional.empty();
+		}
+		else {
+			return Optional.of(p2);
+		}
 	}
 	
 	/**
 	 * TODO
 	 */
 	public void runGame() {
+		Optional<Player> Winner;
+		updatePlayers();
 		while(timeboard.NotEndGame()) {
 			if(performTurn() == 1) {
 				return;
 			}
 		}
+		Winner = whoWins(players[0], players[1]);
+		if (Winner.isEmpty()) {
+			System.out.println("There is no Winner good game to both of you");
+		}
+		else {
+			System.out.println(Winner.get().name() + " wins the Game congratulation");
+		}
 	}
 	
+	/*private void runAutoma(int pos) {
+		Optional<Patch> patch;
+		 patch = timeboard.currentPlayer()
+				 .performTurn(circlePatch().nextPatches(), pos);
+		 if (patch.isEmpty()) {
+			 timeboard.advancePlayer(timeboard.currentPlayer(),
+					 timeboard.oppenentPlayer(timeboard.currentPlayer()));
+		 }
+		 else {
+			 //Mode tactique afficher la carte de l'automa
+				timeboard.checkWhoIsTurn();	// check who is next and change the value of player turn.
+				circlePatch.swapPatch(0); //faire une fonction qui fait le même job
+		 }
+	}*/
 	
+	private int detPLayerChoice(int response) {
+			switch (response) {
+				case 1:
+					if (buy() == 1) {
+						return 1;
+					}
+					break;
+				case 2:
+					timeboard.advancePlayer(players[0], players[1]);
+					return 0;
+				case 3:  
+					return 1;
+				default:
+					break;
+			};
+			return 0;
+	}
 	
 	/**
 	 * TODO
 	 */
 	public int performTurn() {
+		updatePlayers();
 		System.out.println("#######################################");
-		Player currentPlayer = timeboard.currentPlayer();
-		Player opponentPlayer = timeboard.oppenentPlayer(currentPlayer);
-		ViewCirclePatch viewCirclePatch = new ViewCirclePatch();
 		int advanceOrTakeRespond;
 		Interaction.cleanConsole();
 		ViewTimeboard.display(timeboard);
 		ViewCirclePatch.displayNextPaches(circlePatch.nextPatches());
-		System.out.println(currentPlayer);
-		// à remplacer par les fonctions de display.
-		advanceOrTakeRespond = Interaction.advanceOrTake();
-		// do a switch
-		if (advanceOrTakeRespond == 3){
-			return 1;
+		System.out.println(players[0]);
+		if (players[0].realPlayer()) {
+			advanceOrTakeRespond = Interaction.advanceOrTake();
+			return detPLayerChoice(advanceOrTakeRespond);
 		}
-		else if(advanceOrTakeRespond == 1) {	// If the player want to buy pacth.
-			if(buy(currentPlayer) == 1) {return 1;};
-		}
-		else if(advanceOrTakeRespond == 2) { // If the player want to advance.
-			timeboard.advancePlayer(currentPlayer, timeboard.oppenentPlayer(currentPlayer));
+		else {
+//			runAutoma(players[1].currentPosition() - players[0].currentPosition());
 		}
 		return 0;
 	}
 	
-	
 	/**
 	 * Perform every operation to buy an item
 	 */
-	public int buy(Player currentPlayer) {
+	public int buy() {
 		Patch currPatch;
 		int[] coordinate = new int[2];
 		int respondChosePatch;	// The chosen patch.
@@ -103,41 +167,49 @@ public class Game {
 		
 		respondChosePatch = Interaction.chosePatch(); 
 		currPatch = circlePatch.nextPatches().get(respondChosePatch);
-		if (currentPlayer.checkMoney(currPatch.price())) {	//checking if the player have money
-			currentPlayer.patchChose(currPatch);
+		if (players[0].checkMoney(currPatch.price()) && !players[0].modeGlouton()) {	//checking if the player have money
+			players[0].patchChose(currPatch);
 			do {
-//				System.out.println(currentPlayer.quiltboard());
-				ViewQuiltboard.display(currentPlayer.quiltboard());
-				System.out.println(currentPlayer.patch());
+//				System.out.println(players[0].quiltboard());
+				ViewQuiltboard.display(players[0].quiltboard());
+				System.out.println(players[0].patch());
 				respondAction = Interaction.choseCoordinates(coordinate);
 				if(respondAction == 'L' || respondAction == 'R') {
 					System.out.println("ROTATE !");
-					currentPlayer.patch().rotate((respondAction == 'R'));
+					players[0].patch().rotate((respondAction == 'R'));
 				}
 				else if(respondAction == 'F') {
-					currentPlayer.patch().flip();
+					players[0].patch().flip();
 				}
 				else if(respondAction == 'Q') {
 					return 1;
 				}
-//				System.out.println(currentPlayer.quiltboard());
-				ViewQuiltboard.display(currentPlayer.quiltboard());
+//				System.out.println(players[0].quiltboard());
+				ViewQuiltboard.display(players[0].quiltboard());
 				if(respondAction == 'C'){
-					if(currentPlayer.checkPutPatch(coordinate[0], coordinate[1])) {
+					if(players[0].checkPutPatch(coordinate[0], coordinate[1])) {
 						break;
 					}
 				}
 			}while(true);
-			currentPlayer.placePatchs(coordinate[0], coordinate[1]);
-			currentPlayer.buyPatches(currPatch);
-			timeboard.checkCurrentPostionPlayer(currentPlayer,currentPlayer.currentPosition(),
-					currentPlayer.currentPosition() + currPatch.movement());
-			currentPlayer.movePawn(currPatch.movement());
+			players[0].placePatchs(coordinate[0], coordinate[1]);
+			players[0].buyPatches(currPatch);
+			timeboard.checkCurrentPostionPlayer(players[0],players[0].currentPosition(),
+					players[0].currentPosition() + currPatch.movement());
+			players[0].movePawn(currPatch.movement());
 			timeboard.checkWhoIsTurn();	// check who is next and change the value of player turn.
 			circlePatch.swapPatch(respondChosePatch);
 		}
-		else {
+		else if (!players[0].modeGlouton()) {
 			System.out.println("Vous n'avez pas assez d'argent");
+		}
+		else {
+			players[0].buyPatches(currPatch);
+			timeboard.checkCurrentPostionPlayer(players[0],players[0].currentPosition(),
+					players[0].currentPosition() + currPatch.movement());
+			players[0].movePawn(currPatch.movement());
+			timeboard.checkWhoIsTurn();	// check who is next and change the value of player turn.
+			circlePatch.swapPatch(respondChosePatch);
 		}
 		return 0;
 	}
@@ -156,7 +228,7 @@ public class Game {
 	public static void main(String[] args) {
 		
 		Game game = new Game();
-		game.init(true);
+		game.init();
 		game.runGame();
 		/*
 		int i = 3, j = 3;
