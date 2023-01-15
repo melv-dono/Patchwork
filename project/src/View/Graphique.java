@@ -76,7 +76,7 @@ public record Graphique (int sizeCase, int reSize){
 			graphics.fill(new  Rectangle2D.Float(X, Y, sizeCase * 9, sizeCase *4));
 			graphics.setColor(Color.white);
 			graphics.drawString("Player : " + p.name() , X, Y + 25 );
-			graphics.drawString("Number of button : " + p.buttons() , X, Y + 50);
+			graphics.drawString("Number of button : " + p.button() , X, Y + 50);
 			graphics.drawString("Get special tile : " + (p.specialTile() ? "yes" : "no") , X, Y + 75);
 			graphics.drawString("Patch choose :" , X, Y + 100);
 			});
@@ -167,9 +167,9 @@ public record Graphique (int sizeCase, int reSize){
 	}
 	
 	public void displayTimeboard(ApplicationContext context, Timeboard t) {
-		int X = Timeboard.COL + 1;
-		int Y = Timeboard.ROW + 1;
-		int key = Timeboard.NBR_CASE;
+		int X = Timeboard.getCol() + 1;
+		int Y = Timeboard.getRow() + 1;
+		int key = Timeboard.getNbrCase();
 		int ref_x = sizeCase * (3 + 9 + 4);
 		int ref_y = sizeCase * (3 + 4);
 		int x = 0;
@@ -261,9 +261,9 @@ public record Graphique (int sizeCase, int reSize){
 }
  
 	public void displayGame(ApplicationContext context, Game game, List<Color> listColor, Graphique graph, float width, float height, int chose) {
-		graph.displayQuiltboard(context, game.timeboard().firstPlayer().quiltboard(), sizeCase * 3, sizeCase * 3, listColor);
+		graph.displayQuiltboard(context, game.timeboard().first().quiltboard(), sizeCase * 3, sizeCase * 3, listColor);
         graph.displayTimeboard(context, game.timeboard());
-        graph.displayQuiltboard(context, game.timeboard().secondPlayer().quiltboard(), sizeCase * (3 + 18), sizeCase * 3, listColor);
+        graph.displayQuiltboard(context, game.timeboard().second().quiltboard(), sizeCase * (3 + 18), sizeCase * 3, listColor);
         graph.displayCirclepatch(context, game.circlePatch(), 10, sizeCase * 16, width, height, chose);
         graph.displayPlayer(context, game.timeboard().first(), sizeCase * 3, sizeCase * 12);
         graph.displayPlayer(context, game.timeboard().second(), sizeCase * (3 + 18), sizeCase * 12);
@@ -293,7 +293,4 @@ public record Graphique (int sizeCase, int reSize){
 			graphics.drawString("YOU DO NOT HAVE ENOUGHT MONEY" , X, Y + 25 );
 			});
 	}
-	public static void main(String[] args) {
-    InteractionGraphique.run();
-  }
 }

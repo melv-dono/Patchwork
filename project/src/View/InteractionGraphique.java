@@ -183,9 +183,7 @@ public class InteractionGraphique {
 	      }
 		return true;
 	}
-	public static void run() {
-		Game game = new Game();
-		game.init(true);
+	public static void run(Game game) {
 	    var colorlist = Graphique.colorList();
 	    Application.run(Color.DARK_GRAY, context -> {
 	      // get the size of the screen

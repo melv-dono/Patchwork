@@ -14,6 +14,7 @@ import Model.Player;
 import Model.Timeboard;
 import Model.Player;
 import View.Interaction;
+import View.InteractionGraphique;
 import View.ViewCirclePatch;
 import View.ViewQuiltboard;
 import View.ViewTimeboard;
@@ -51,8 +52,10 @@ public class Game {
 	 * Initialize every object of the model and the view
 	 * 
 	 * @param specialPatch
+	 * @return
+	 * 		0 if its the graphic mode otherwise 1.
 	 */
-	public void init() {
+	public int init() {
 		int version = Interaction.initGame();
 		timeboard.initMagicCases((version == 1) ? false : true);
 		if (version == 1) {
@@ -60,13 +63,14 @@ public class Game {
 		}
 		
 		// Configuration du jeu à savoir quelle version lancée
-		String file = (version == 1) ? "src/data/phase1.txt" : "src/data/phase2.txt";
+		String file = (version == 1) ? "phase1.txt" : "phase2.txt";
 		try {
 			circlePatch.initCirclePatch(file, (version == 1) ? 2 : 33, (version == 1) ? 20 : 1); 				
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
-		}		
+		}
+		return (version == 3) ? 0 : 1;
 	}
 	
 	private Optional<Player> whoWins(Player p1, Player p2) {
@@ -228,25 +232,11 @@ public class Game {
 	public static void main(String[] args) {
 		
 		Game game = new Game();
-		game.init();
-		game.runGame();
-		/*
-		int i = 3, j = 3;
-		int tab[][] = {{0, 1}, {1, 1}};
-		Label l = new Label(0, 3, 2);
-		Patch p = new Patch(l, tab);
-		Player first = new Player("first");
-		first.patchChose(p);
-		first.placePatchs(i, j);
-		System.out.println(first.quiltboard());
-		int tab2[][] = {{0, 1}, {1, 1}};
-		Label l2 = new Label(0, 3, 2);
-		Patch p2 = new Patch(l2, tab2);
-		first.patchChose(p2);
-		if(first.checkPutPatch(i, j)) {
-			first.placePatchs(2, 3);
+		if(game.init() == 1) {
+			game.runGame();
 		}
-		System.out.println(first.quiltboard());
-		*/
+		else {
+			InteractionGraphique.run(game);
+		}
 	}
 }

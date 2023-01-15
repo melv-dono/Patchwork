@@ -1,0 +1,143 @@
+virtualButton = 8
+income = 0
+filter = 2
+filter = 3
+filter = 4
+
+virtualButton = 1
+income = 4
+filter = 1
+filter = 3
+filter = 4
+
+virtualButton = 7
+income = 0
+filter = 3
+filter = 2
+filter = 4
+
+virtualButton = 0
+income = 5
+filter = 4
+filter = 4
+filter = 4
+
+virtualButton = 3
+income = 3
+filter = 1
+filter = 2
+filter = 4
+
+virtualButton = 6
+income = 0
+filter = 1
+filter = 2
+filter = 4
+
+virtualButton = 5
+income = 1
+filter = 1
+filter = 3
+filter = 4
+
+virtualButton = 9
+income = 0
+filter = 3
+filter = 2
+filter = 4
+
+virtualButton = 8
+income = 0
+filter = 3
+filter = 1
+filter = 4
+
+virtualButton = 4
+income = 1
+filter = 1
+filter = 2
+filter = 4
+
+virtualButton = 9
+income = 0
+filter = 3
+filter = 2
+filter = 4
+
+virtualButton = 2
+income = 4
+filter = 1
+filter = 3
+filter = 4
+
+virtualButton = 1
+income = 4
+filter = 1
+filter = 2
+filter = 4
+
+virtualButton = 1
+income = 5
+filter = 1
+filter = 3
+filter = 4
+
+virtualButton = 3
+income = 3
+filter = 1
+filter = 2
+filter = 4
+
+virtualButton = 3
+income = 4
+filter = 1
+filter = 3
+filter = 4
+
+virtualButton = 4
+income = 1
+filter = 1
+filter = 2
+filter = 4
+
+virtualButton = 4
+income = 1
+filter = 1
+filter = 3
+filter = 4
+
+virtualButton = 6
+income = 0
+filter = 3
+filter = 2
+filter = 4
+
+virtualButton = 6
+income = 0
+filter = 1
+filter = 2
+filter = 4
+
+virtualButton = 8
+income = 0
+filter = 2
+filter = 3
+filter = 4
+
+virtualButton = 8
+income = 0
+filter = 3
+filter = 2
+filter = 4
+
+virtualButton = 9
+income = 0
+filter = 3
+filter = 1
+filter = 4
+
+virtualButton = 9
+income = 0
+filter = 2
+filter = 3
+filter = 4

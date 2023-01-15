@@ -44,7 +44,7 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 	public void initMagicCases(Boolean specialPatch) {
 		Objects.requireNonNull(specialPatch);
 		Case caseValue;
-		for(int idCase = 1; idCase <= NBR_CASE; idCase++)
+		for(int idCase = 1; idCase <= getNbrCase(); idCase++)
 		{
 			if(idCase % 6 == 0)	{ 
 				caseValue = Case.BUTTON;
@@ -168,8 +168,8 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 	 * 		true if the end game else false
 	 */
 	public boolean NotEndGame() {
-		return (!((firstPlayer.currentPosition() == NBR_CASE) ||
-				secondPlayer.currentPosition() == NBR_CASE));
+		return (!((firstPlayer.currentPosition() == getNbrCase()) ||
+				secondPlayer.currentPosition() == getNbrCase()));
 	}
 	
 	/**
@@ -250,6 +250,18 @@ public class Timeboard { // Maybe change with a record see what is the problem l
 		currentPlayer.movePawn(end - start);
 		currentPlayer.earnButton(end - start);
 		checkWhoIsTurn();	// check who is next and change the value of player turn.
+	}
+
+	public static int getCol() {
+		return COL;
+	}
+
+	public static int getRow() {
+		return ROW;
+	}
+
+	public static int getNbrCase() {
+		return NBR_CASE;
 	}
 
 }

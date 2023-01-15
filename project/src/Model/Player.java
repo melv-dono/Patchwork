@@ -319,4 +319,8 @@ public class Player {
 		string.append("NUMBER OF BUTTON : " + buttons + "\n");
 		return string.toString();
 	}
+	
+	public boolean specialTile() {
+		return specialTile;
+	}
 }

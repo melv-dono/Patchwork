@@ -270,4 +270,13 @@ public class CirclePatch {
 		}
 		return string.toString();
 	}
+	/**
+	 * The position of the time token.
+	 * 
+	 * @return
+	 * 		THe position.
+	 */
+	public int posPawn() {
+		return pawn.currentPosition();
+	}
 }
